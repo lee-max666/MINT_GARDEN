@@ -3,465 +3,1122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>민트가든 - 날씨 연동 식물 키우기 & 운세</title>
+    <title>MINT GARDEN - 날씨 연동 식물키우기</title>
     <!-- 민트가든 로고를 썸네일(Open Graph)로 지정 -->
-    <meta property="og:title" content="민트가든 - 오늘의 식물 육성 운세">
-    <meta property="og:description" content="실시간 날씨에 따라 나만의 식물을 키우고 오늘의 운세를 확인해보세요!">
+    <meta property="og:title" content="MINT GARDEN - 날씨 연동 식물키우기">
+    <meta property="og:description" content="실시간 날씨에 따라 나만의 식물을 키워보세요">
     <meta property="og:image" content="images/mint_garden_logo.png">
+
+    <!-- Tailwind CSS & html2canvas 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- Google Fonts: Gowun Dodum & Noto Sans KR -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-color: #2e7d32;
-            --accent-color: #81c784;
-            --bg-color: #f1f8e9;
-            --card-bg: #ffffff;
-            --text-color: #333333;
-        }
-
         body {
-            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            font-family: 'Noto Sans KR', sans-serif;
+            background: linear-gradient(135deg, #f3f7f0 0%, #e4efe0 100%);
             min-height: 100vh;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        header {
-            text-align: center;
-            padding: 20px;
-            background: var(--primary-color);
-            color: white;
-            width: 100%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
+        .font-serif-kr {
+            font-family: 'Gowun Dodum', serif;
         }
 
-        header img.logo {
-            width: 45px;
-            height: 45px;
-            object-fit: contain;
+        /* 식물 살랑거림 애니메이션 */
+        @keyframes sway {
+            0%, 100% { transform: rotate(-2.5deg) scale(1); }
+            50% { transform: rotate(2.5deg) scale(1.02); }
+        }
+        .plant-sway {
+            animation: sway 3s ease-in-out infinite;
+            transform-origin: bottom center;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 1.5rem;
+        /* 벌레 꿈틀거림 애니메이션 */
+        @keyframes wiggle {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(-4px, -3px) rotate(-10deg) scale(1.08); }
+            75% { transform: translate(4px, 2px) rotate(10deg) scale(0.95); }
         }
-
-        .container {
-            max-width: 600px;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            width: 100%;
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            text-align: center;
-        }
-
-        .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            font-size: 1rem;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.2s;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background-color: #1b5e20;
-        }
-
-        .btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        /* 가드닝 화면 스타일 */
-        .pot-container {
-            position: relative;
-            width: 250px;
-            height: 250px;
-            margin: 20px auto;
-            background: #e8f5e9;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: inset 0 4px 8px rgba(0,0,0,0.05);
-        }
-
-        .pot-container img {
-            max-width: 70%;
-            max-height: 70%;
-            object-fit: contain;
-        }
-
-        .bug-obj {
-            position: absolute;
-            cursor: pointer;
-            width: 45px;
-            height: 45px;
-            animation: bounce 0.5s infinite alternate;
-        }
-
-        @keyframes bounce {
-            from { transform: translateY(0); }
-            to { transform: translateY(-8px); }
-        }
-
-        .gauge-group {
-            margin: 15px 0;
-            text-align: left;
-        }
-
-        .gauge-label {
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .gauge-bar-bg {
-            width: 100%;
-            height: 12px;
-            background: #eee;
-            border-radius: 6px;
-            overflow: hidden;
-        }
-
-        .gauge-bar-fill {
-            height: 100%;
-            width: 50%;
-            transition: width 0.3s ease;
-        }
-
-        .action-btns {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .action-btn {
-            padding: 10px;
-            border: 2px solid var(--primary-color);
-            background: white;
-            color: var(--primary-color);
-            font-weight: bold;
-            border-radius: 8px;
+        .pest-wiggle {
+            animation: wiggle 0.6s ease-in-out infinite;
             cursor: pointer;
         }
 
-        .action-btn:active {
-            background: var(--accent-color);
-            color: white;
+        /* 물방울/반짝임 이펙트 */
+        @keyframes floatUp {
+            0% { opacity: 1; transform: translateY(0) scale(0.8); }
+            100% { opacity: 0; transform: translateY(-40px) scale(1.3); }
+        }
+        .effect-float {
+            animation: floatUp 0.9s ease-out forwards;
+            pointer-events: none;
         }
 
-        .hidden {
-            display: none !important;
+        /* 육성 성공 카드 반짝임 효과 */
+        .status-good-glow {
+            box-shadow: 0 0 25px rgba(52, 211, 153, 0.45), inset 0 0 15px rgba(255, 255, 255, 0.8);
+            border: 2px solid #34d399;
         }
 
-        .dev-reset {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: #888;
-            background: none;
-            border: 1px dashed #ccc;
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
+        /* 게이지 바 부드러운 전환 */
+        .gauge-fill {
+            transition: width 0.3s ease, background-color 0.3s ease;
         }
     </style>
 </head>
-<body>
+<body class="text-stone-800 flex flex-col items-center justify-between p-4 sm:p-6">
 
-    <header>
-        <img src="images/mint_garden_logo.png" alt="민트가든 로고" class="logo" onerror="this.style.display='none'">
-        <h1>🌿 민트가든 식물 육성 운세</h1>
+    <!-- 상단 헤더 & 내비게이션 -->
+    <header class="w-full max-w-md flex items-center justify-between bg-white/85 backdrop-blur-md px-5 py-3.5 rounded-2xl shadow-sm border border-emerald-100 mb-4">
+        <div class="flex items-center gap-2.5">
+            <img src="images/mint_garden_logo.png" alt="MINT GARDEN" class="w-8 h-8 object-contain rounded-lg" onerror="this.style.display='none'; document.getElementById('fallback-logo').classList.remove('hidden');">
+            <span id="fallback-logo" class="hidden text-2xl">🌿</span>
+            <div>
+                <h1 class="font-serif-kr font-bold text-lg text-emerald-900 leading-tight">MINT GARDEN</h1>
+                <p class="text-[11px] text-emerald-600" id="header-date">날짜 불러오는 중...</p>
+            </div>
+        </div>
+        <div class="flex gap-1.5">
+            <button type="button" id="tab-garden" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm transition">
+                정원
+            </button>
+            <button type="button" id="tab-dex" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition">
+                도감 <span id="dex-count" class="ml-0.5 text-[10px] bg-emerald-200 px-1.5 py-0.5 rounded-full">0</span>
+            </button>
+        </div>
     </header>
 
-    <div class="container">
+    <!-- 메인 컨텐츠 컨테이너 (모바일 최적화 max-w-md) -->
+    <main class="w-full max-w-md flex-1 flex flex-col justify-center">
 
-        <!-- 1단계: 시작 화면 -->
-        <div id="screen-start" class="card">
-            <h2>오늘의 정원 방문을 환영합니다!</h2>
-            <p>하루에 한 번, 실시간 날씨의 영향을 받는 나만의 식물을 심고 오늘의 운세를 확인해보세요.</p>
+        <!-- [탭 1] 정원 화면 -->
+        <section id="view-garden" class="space-y-4">
             
-            <div style="margin: 20px 0; text-align: left;">
-                <label for="region-select" style="font-weight: bold; display: block; margin-bottom: 8px;">📍 지역 선택:</label>
-                <select id="region-select" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 1rem;">
-                    <option value="서울">서울특별시</option>
-                    <option value="부산">부산광역시</option>
-                    <option value="대전">대전광역시</option>
-                    <option value="제주">제주특별자치도</option>
-                    <option value="강릉">강원 강릉시</option>
-                </select>
+            <!-- 1. 오늘의 지역 날씨 위젯 -->
+            <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-sm border border-emerald-100">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="flex items-center gap-1.5">
+                        <span class="text-sm">📍</span>
+                        <select id="region-select" class="text-sm font-bold text-stone-700 bg-stone-100 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-emerald-400">
+                            <option value="seoul" selected>서울특별시</option>
+                            <option value="busan">부산광역시</option>
+                            <option value="daejeon">대전광역시</option>
+                            <option value="jeju">제주특별자치도</option>
+                            <option value="gangneung">강원 강릉시</option>
+                        </select>
+                    </div>
+                    <span id="weather-badge" class="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
+                        ☀️ 맑음 · 21°C
+                    </span>
+                </div>
+                <p id="weather-desc" class="text-xs text-stone-600 leading-relaxed">
+                    따스한 햇살과 적당한 바람이 불어 식물이 자라기 좋은 날씨입니다.
+                </p>
             </div>
 
-            <button class="btn" id="start-btn">식물 키우기</button>
-            <p id="limit-msg" style="color: #d32f2f; font-size: 0.9rem; margin-top: 15px;" class="hidden">오늘은 이미 식물을 키우셨습니다! 내일 다시 도전해주세요.</p>
+            <!-- 2-A. [대기 화면] 씨앗 심기 전 -->
+            <div id="state-idle" class="bg-white rounded-3xl p-6 shadow-md border border-emerald-100 text-center space-y-5">
+                <div class="w-28 h-28 mx-auto bg-gradient-to-b from-sky-100 to-emerald-50 rounded-full flex items-center justify-center shadow-inner border-4 border-white overflow-hidden">
+                    <img src="images/stage_seed.png" alt="씨앗" class="w-20 h-20 object-contain" onerror="this.outerHTML='<span class=\'text-6xl\'>🌱</span>'">
+                </div>
+                <div class="space-y-1.5">
+                    <span class="inline-block text-[11px] font-bold tracking-wider uppercase text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full">
+                        MINT GARDEN · DAILY FORTUNE
+                    </span>
+                    <h2 class="font-serif-kr text-2xl font-bold text-stone-800">오늘의 씨앗이 도착했어요</h2>
+                    <p class="text-xs text-stone-500 leading-relaxed">
+                        하루에 한 번, 실시간 날씨의 영향을 받는 나만의 식물을 심고 키워보세요.<br>
+                        <strong>75초</strong> 동안 물과 햇빛, 거름을 조절해 수확해보세요!
+                    </p>
+                </div>
+
+                <div class="bg-stone-50 rounded-2xl p-3.5 text-left text-xs text-stone-600 space-y-1.5 border border-stone-100">
+                    <div class="font-bold text-stone-700 mb-1">💡 정원사 수칙</div>
+                    <p>• 게이지의 <span class="text-emerald-600 font-bold">초록색 안전 구간</span>을 유지해야 건강하게 자랍니다.</p>
+                    <p>• 중간에 나타나는 <span class="text-rose-500 font-bold">해충</span>은 터치해서 바로 잡아주세요!</p>
+                    <p>• 수확할 때까지 어떤 식물이 자랄지는 비밀입니다.</p>
+                </div>
+
+                <button type="button" id="btn-start-grow" class="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-base shadow-lg shadow-emerald-200 active:scale-[0.98] transition cursor-pointer">
+                    식물 키우기
+                </button>
+            </div>
+
+            <!-- 2-B. [육성 진행 화면] 75초 실시간 게임 플레이 -->
+            <div id="state-playing" class="hidden bg-white rounded-3xl p-5 shadow-md border border-emerald-100 space-y-4">
+                
+                <!-- 상단 타이머 & 현재 식물 상태 -->
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="flex items-center gap-1.5 flex-wrap">
+                            <span id="plant-category-badge" class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800">비밀 씨앗</span>
+                            <span id="playing-region-badge" class="text-[11px] font-bold px-2 py-0.5 rounded-md bg-sky-100 text-sky-800">📍 서울특별시</span>
+                        </div>
+                        <h3 id="plant-stage-title" class="font-bold text-base text-stone-800 mt-1">1단계: 흙 속에서 깨어나는 중</h3>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-[11px] text-stone-400 block">수확까지 남은 시간</span>
+                        <span id="timer-display" class="font-mono font-bold text-xl text-emerald-600">01:15</span>
+                    </div>
+                </div>
+
+                <!-- 진행도 프로그레스 바 -->
+                <div class="w-full bg-stone-100 h-2 rounded-full overflow-hidden">
+                    <div id="growth-progress" class="bg-emerald-500 h-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+
+                <!-- 화분 및 식물 그래픽 영역 -->
+                <div id="pot-stage" class="relative w-full h-56 rounded-2xl overflow-hidden flex flex-col items-center justify-end pb-4 transition-colors duration-500 bg-gradient-to-b from-sky-100 via-sky-50 to-amber-50 border border-stone-200">
+                    
+                    <!-- 차광막 오버레이 (햇빛 조절용) -->
+                    <div id="shade-overlay" class="hidden absolute inset-0 bg-stone-900/35 backdrop-blur-[1px] z-20 flex items-start justify-center pt-3 pointer-events-none">
+                        <span class="bg-stone-800/85 text-white text-[11px] px-3 py-1 rounded-full shadow">☂️ 차광막 작동 중 (햇빛 차단)</span>
+                    </div>
+
+                    <!-- 선택 지역 및 날씨 배지 -->
+                    <div id="stage-weather-badge" class="absolute top-3 right-3 z-10 bg-white/85 backdrop-blur-sm text-stone-700 text-[11px] font-bold px-2.5 py-1 rounded-full shadow-sm border border-stone-200/60">
+                        📍 서울특별시 · ☀️ 21°C
+                    </div>
+
+                    <!-- 상태 경고 뱃지 -->
+                    <div id="status-alert" class="hidden absolute top-3 left-3 z-30 bg-rose-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow animate-bounce">
+                        ⚠️ 수분 부족!
+                    </div>
+
+                    <!-- 식물 본체 이미지 컨테이너 (공용 성장 이미지 적용) -->
+                    <div id="plant-visual-container" class="relative z-10 flex flex-col items-center justify-end mb-1">
+                        <img id="plant-img" src="images/soil_base.png" alt="성장 중인 식물" class="w-36 h-36 object-contain plant-sway select-none transition-all duration-300" onerror="this.src='images/stage_seed.png'">
+                    </div>
+
+                    <!-- 화분 그래픽 -->
+                    <div class="relative z-10 w-28 h-11 bg-gradient-to-b from-amber-600 to-amber-800 rounded-b-2xl rounded-t-sm shadow-md flex items-center justify-center border-t-4 border-amber-500">
+                        <span class="text-[10px] text-amber-200/90 font-bold tracking-widest">MINT GARDEN</span>
+                    </div>
+
+                    <!-- 벌레 출몰 레이어 -->
+                    <div id="pest-layer" class="absolute inset-0 z-30 pointer-events-none"></div>
+
+                    <!-- 액션 이펙트 레이어 -->
+                    <div id="effect-layer" class="absolute inset-0 z-20 pointer-events-none flex items-center justify-center"></div>
+                </div>
+
+                <!-- 실시간 3대 환경 게이지 (수분, 햇빛, 거름 + 적정 기준 안전 구간 표시) -->
+                <div class="space-y-2.5 bg-stone-50 p-3.5 rounded-2xl border border-stone-100">
+                    <!-- 수분 게이지 -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="font-bold text-sky-700">💧 수분</span>
+                            <span id="water-val-text" class="text-emerald-600 font-bold">적정 (50%)</span>
+                        </div>
+                        <div class="relative w-full h-3 bg-stone-200 rounded-full overflow-hidden">
+                            <div id="water-safe-zone" class="absolute top-0 bottom-0 bg-emerald-200/90 border-x border-emerald-500" style="left: 35%; width: 35%;"></div>
+                            <div id="water-bar" class="gauge-fill relative h-full bg-sky-500/85 rounded-full" style="width: 50%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 햇빛 게이지 -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="font-bold text-amber-600">☀️ 일조량</span>
+                            <span id="sun-val-text" class="text-emerald-600 font-bold">적정 (55%)</span>
+                        </div>
+                        <div class="relative w-full h-3 bg-stone-200 rounded-full overflow-hidden">
+                            <div id="sun-safe-zone" class="absolute top-0 bottom-0 bg-emerald-200/90 border-x border-emerald-500" style="left: 40%; width: 35%;"></div>
+                            <div id="sun-bar" class="gauge-fill relative h-full bg-amber-400/85 rounded-full" style="width: 55%"></div>
+                        </div>
+                    </div>
+
+                    <!-- 거름(영양) 게이지 -->
+                    <div>
+                        <div class="flex justify-between text-xs mb-1">
+                            <span class="font-bold text-emerald-700">🧪 거름(영양)</span>
+                            <span id="fert-val-text" class="text-emerald-600 font-bold">적정 (50%)</span>
+                        </div>
+                        <div class="relative w-full h-3 bg-stone-200 rounded-full overflow-hidden">
+                            <div id="fert-safe-zone" class="absolute top-0 bottom-0 bg-emerald-200/90 border-x border-emerald-500" style="left: 35%; width: 35%;"></div>
+                            <div id="fert-bar" class="gauge-fill relative h-full bg-emerald-500/85 rounded-full" style="width: 50%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 컨트롤 액션 버튼 3종 -->
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" id="btn-water" class="flex flex-col items-center justify-center py-3 px-2 rounded-2xl bg-sky-50 hover:bg-sky-100 active:scale-95 border border-sky-200 transition">
+                        <span class="text-xl mb-0.5">💧</span>
+                        <span class="text-xs font-bold text-sky-900">물 주기</span>
+                    </button>
+                    <button type="button" id="btn-shade" class="flex flex-col items-center justify-center py-3 px-2 rounded-2xl bg-amber-50 hover:bg-amber-100 active:scale-95 border border-amber-200 transition">
+                        <span class="text-xl mb-0.5">☂️</span>
+                        <span class="text-xs font-bold text-amber-900" id="btn-shade-text">차광막 켜기</span>
+                    </button>
+                    <button type="button" id="btn-fertilize" class="flex flex-col items-center justify-center py-3 px-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100 active:scale-95 border border-emerald-200 transition">
+                        <span class="text-xl mb-0.5">🧪</span>
+                        <span class="text-xs font-bold text-emerald-900">거름 주기</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2-C. [수확 완료 & 오늘의 운세 카드 화면] -->
+            <div id="state-result" class="hidden space-y-4">
+                <!-- 캡처 대상 카드 영역 -->
+                <div id="fortune-card" class="bg-white rounded-3xl p-6 shadow-lg border border-emerald-200 text-center space-y-4 relative overflow-hidden">
+                    
+                    <!-- 상태 뱃지 -->
+                    <div class="flex items-center justify-between">
+                        <span id="res-category" class="text-xs font-bold px-2.5 py-1 rounded-full bg-stone-100 text-stone-600">과일 · 서울특별시</span>
+                        <span id="res-status-badge" class="text-xs font-black px-3 py-1 rounded-full bg-emerald-500 text-white shadow-sm">
+                            육성: 상태 좋음
+                        </span>
+                    </div>
+
+                    <!-- 수확 식물 이미지 -->
+                    <div class="py-2">
+                        <div class="w-40 h-40 mx-auto bg-gradient-to-b from-emerald-50/70 to-amber-50/50 rounded-full flex items-center justify-center p-2 border-2 border-emerald-100 shadow-inner">
+                            <img id="res-plant-img" src="" alt="수확한 식물" class="w-36 h-36 object-contain drop-shadow-md">
+                        </div>
+                        <h2 id="res-plant-name" class="font-serif-kr text-2xl font-bold text-stone-800 mt-3">붉은 장미</h2>
+                        <p id="res-harvest-comment" class="text-xs text-emerald-700 font-medium mt-1">정성 어린 관리로 건강하게 수확했습니다!</p>
+                    </div>
+
+                    <hr class="border-dashed border-stone-200">
+
+                    <!-- 오늘의 운세 영역 -->
+                    <div class="bg-gradient-to-br from-emerald-50/80 to-amber-50/60 rounded-2xl p-4 text-left space-y-2.5 border border-emerald-100/80">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-base">🔮</span>
+                                <h3 class="font-serif-kr font-bold text-sm text-emerald-950">오늘의 민트가든 운세</h3>
+                            </div>
+                            <span class="text-[10px] font-bold text-emerald-700/70">MINT GARDEN</span>
+                        </div>
+                        <p id="res-fortune-text" class="text-xs text-stone-700 leading-relaxed">
+                            정성껏 가꾼 씨앗이 찬란한 결실을 맺듯, 오늘 당신이 공들인 일에서도 기대 이상의 보상이 찾아옵니다.
+                        </p>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <div class="bg-white/85 rounded-xl p-2 text-center">
+                                <span class="text-[10px] text-stone-400 block">행운의 컬러</span>
+                                <span id="res-lucky-color" class="text-xs font-bold text-stone-700">로즈 레드</span>
+                            </div>
+                            <div class="bg-white/85 rounded-xl p-2 text-center">
+                                <span class="text-[10px] text-stone-400 block">행운의 아이템</span>
+                                <span id="res-lucky-item" class="text-xs font-bold text-stone-700">향수</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 이미지 저장 및 도감 버튼 (캡처 영역 외부 배치) -->
+                <div class="flex gap-2">
+                    <button type="button" id="btn-save-image" class="flex-1 py-3.5 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md active:scale-[0.98] transition cursor-pointer">
+                        📸 이미지 저장하기
+                    </button>
+                    <button type="button" id="btn-open-dex" class="px-5 py-3.5 rounded-2xl bg-white hover:bg-stone-100 text-stone-700 font-bold text-xs border border-stone-200 shadow-sm transition cursor-pointer">
+                        도감 보기
+                    </button>
+                </div>
+
+                <p class="text-center text-xs text-stone-500">
+                    오늘의 정원 가꾸기를 완료했습니다. 내일 새로운 날씨와 함께 다시 찾아오세요! 🌙
+                </p>
+            </div>
+        </section>
+
+        <!-- [탭 2] 나만의 식물 도감 화면 -->
+        <section id="view-dex" class="hidden space-y-4">
+            <div class="bg-white rounded-3xl p-5 shadow-md border border-emerald-100">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="font-serif-kr text-xl font-bold text-stone-800">나의 식물 도감</h2>
+                        <p class="text-xs text-stone-500">지금까지 수확한 민트가든 식물 기록입니다.</p>
+                    </div>
+                    <span id="dex-progress-text" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
+                        0 / 12 수집
+                    </span>
+                </div>
+
+                <!-- 도감 그리드 -->
+                <div id="dex-grid" class="grid grid-cols-3 gap-2.5">
+                    <!-- JS로 동적 생성 -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 하단 푸터 & 개발자용 은밀한 리셋 버튼 -->
+    <footer class="w-full max-w-md mt-6 pt-3 flex items-center justify-between text-[11px] text-stone-400">
+        <span>© MINT GARDEN</span>
+        
+        <!-- 제작자 테스트용 초기화 및 빠른 테스트 컨트롤 -->
+        <div class="flex items-center gap-2">
+            <button type="button" id="dev-fast-btn" class="hidden text-amber-600/80 hover:text-amber-700 underline">
+                [테스트: 5초남기기]
+            </button>
+            <button type="button" id="dev-reset-btn" class="opacity-50 hover:opacity-100 transition underline" title="개발자 테스트용 일일 제한 초기화">
+                [Dev Reset]
+            </button>
         </div>
+    </footer>
 
-        <!-- 2단계: 육성 및 가드닝 화면 -->
-        <div id="screen-game" class="card hidden">
-            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem; color: #666;">
-                <span id="game-location-info">📍 서울 · ☀️ 21°C</span>
-                <span id="timer-display" style="font-weight: bold; color: var(--primary-color);">남은 시간: 1:15</span>
-            </div>
-
-            <div class="pot-container" id="pot-area">
-                <img id="plant-img" src="images/stage_seed.png" alt="성장 중인 식물" onerror="this.src='images/soil_base.png'">
-                <!-- 돌발 벌레가 나타날 자리 -->
-                <div id="bug-container"></div>
-            </div>
-
-            <p id="status-desc" style="font-weight: bold; color: var(--primary-color);">씨앗을 심었습니다. 정성껏 돌봐주세요!</p>
-
-            <div class="gauge-group">
-                <div class="gauge-label"><span>💧 수분 조절</span><span id="water-val">50%</span></div>
-                <div class="gauge-bar-bg"><div class="gauge-bar-fill" id="water-bar" style="background-color: #42a5f5; width: 50%;"></div></div>
-            </div>
-
-            <div class="gauge-group">
-                <div class="gauge-label"><span>☀️ 햇빛 조절</span><span id="sun-val">50%</span></div>
-                <div class="gauge-bar-bg"><div class="gauge-bar-fill" id="sun-bar" style="background-color: #ffa726; width: 50%;"></div></div>
-            </div>
-
-            <div class="action-btns">
-                <button class="action-btn" onclick="addWater()">💦 물 주기</button>
-                <button class="action-btn" onclick="toggleSun()">🌤️ 차광막</button>
-                <button class="action-btn" onclick="addFertilizer()">✨ 거름주기</button>
-            </div>
-        </div>
-
-        <!-- 3단계: 결과 및 운세 카드 화면 -->
-        <div id="screen-result" class="card hidden">
-            <h2>✨ 오늘의 육성 결과 & 운세 ✨</h2>
-            <div class="pot-container" style="background: #fff; border: 2px dashed var(--accent-color);">
-                <img id="result-plant-img" src="" alt="완성된 식물">
-            </div>
-            
-            <h3 id="result-title" style="margin: 10px 0; color: var(--primary-color);">[육성 성공: 상태 좋음] 장미</h3>
-            <p id="result-fortune" style="background: #f9fbe7; padding: 15px; border-radius: 8px; font-style: italic; line-height: 1.5;"></p>
-
-            <button class="btn" onclick="downloadCardImage()">이미지 저장하기</button>
-            <br>
-            <button class="dev-reset" onclick="resetDailyLimit()" style="margin-top: 15px;">🔄 (테스트용) 오늘 기록 초기화하기</button>
-        </div>
-
-        <!-- 개발자 테스트용 초기화 버튼 (시작 화면용) -->
-        <button class="dev-reset" onclick="resetDailyLimit()">🔄 [Dev] 일일 제한 초기화</button>
-
+    <!-- 커스텀 토스트 메시지 -->
+    <div id="toast-msg" class="fixed bottom-14 left-1/2 -translate-x-1/2 bg-stone-800/90 text-white text-xs font-medium px-4 py-2.5 rounded-full shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 z-50 whitespace-nowrap">
+        메시지 알림
     </div>
 
+    <!-- 게임 로직 스크립트 -->
     <script>
-        // 12종 식물 데이터베이스 (카테고리별 성공/실패 이미지 매칭)
-        const plantDatabase = [
-            // 꽃 (3)
-            { name: "장미", category: "꽃", success: "images/plant_rose_success.png", failed: "images/plant_rose_failed.png", fortune: "오늘은 작은 노력으로도 큰 결실을 맺는 찬란한 하루가 될 것입니다." },
-            { name: "해바라기", category: "꽃", success: "images/plant_sunflower_success.png", failed: "images/plant_sunflower_failed.png", fortune: "당신의 밝은 미소가 주변 사람들에게 행운과 기쁨을 전달합니다." },
-            { name: "네잎클로버", category: "꽃", success: "images/plant_clover_success.png", failed: "images/plant_clover_failed.png", fortune: "뜻밖의 행운이나 소중한 기회가 찾아오는 대길의 하루입니다!" },
-            // 관엽식물 (3)
-            { name: "몬스테라", category: "관엽식물", success: "images/plant_monstera_success.png", failed: "images/plant_monstera_failed.png", fortune: "주변 환경이 안정되고 마음의 평온을 찾게 되는 평화로운 날입니다." },
-            { name: "다육식물", category: "관엽식물", success: "images/plant_succulent_success.png", failed: "images/plant_succulent_failed.png", fortune: "차분하고 묵묵하게 준비해온 일에서 실속을 톡톡히 챙기게 됩니다." },
-            { name: "선인장", category: "관엽식물", success: "images/plant_cactus_success.png", failed: "images/plant_cactus_failed.png", fortune: "어려운 역경 속에서도 강인한 의지로 목표를 달성할 수 있습니다." },
-            // 야채/채소 (3)
-            { name: "상추", category: "야채", success: "images/plant_lettuce_success.png", failed: "images/plant_lettuce_failed.png", fortune: "가까운 지인과의 소소한 소통 속에서 유익한 정보를 얻게 됩니다." },
-            { name: "방울토마토", category: "야채", success: "images/plant_tomato_success.png", failed: "images/plant_tomato_failed.png", fortune: "작은 아이디어가 알찬 성과로 이어져 주변의 칭찬을 받게 됩니다." },
-            { name: "당근", category: "야채", success: "images/plant_carrot_success.png", failed: "images/plant_carrot_failed.png", fortune: "숨겨져 있던 보물 같은 기회나 능력을 발휘할 순간이 옵니다." },
-            // 과일 (3)
-            { name: "딸기", category: "과일", success: "images/plant_strawberry_success.png", failed: "images/plant_strawberry_failed.png", fortune: "달콤하고 기분 좋은 만남이나 선물이 기다리고 있는 하루입니다." },
-            { name: "레몬", category: "과일", success: "images/plant_lemon_success.png", failed: "images/plant_lemon_failed.png", fortune: "상큼한 변화가 필요한 시점입니다. 새로운 도전을 시작해보세요!" },
-            { name: "포도", category: "과일", success: "images/plant_grape_success.png", failed: "images/plant_grape_failed.png", fortune: "그동안 공들였던 인간관계나 프로젝트에서 알찬 수확이 있습니다." }
+        // 1. 식물 데이터베이스 (12종: 공용 성장 이미지 + 고유 성공/실패 이미지)
+        const PLANTS_DB = [
+            // [꽃]
+            {
+                id: 'rose', category: '꽃', name: '장미',
+                successImg: 'images/plant_rose_success.png',
+                failedImg: 'images/plant_rose_failed.png',
+                waterSafe: [40, 70], sunSafe: [50, 80], fertSafe: [45, 75],
+                weatherPref: ['sunny', 'mild'],
+                weakness: '햇빛이 너무 강하면 잎이 타고, 수분이 부족하면 금방 시듭니다.',
+                fortuneGood: '열정과 사랑이 꽃피는 날입니다. 망설였던 고백이나 새로운 도전을 시작하기에 최고의 타이밍입니다.',
+                luckyColor: '로즈 레드', luckyItem: '향수'
+            },
+            {
+                id: 'sunflower', category: '꽃', name: '해바라기',
+                successImg: 'images/plant_sunflower_success.png',
+                failedImg: 'images/plant_sunflower_failed.png',
+                waterSafe: [45, 75], sunSafe: [65, 95], fertSafe: [40, 70],
+                weatherPref: ['sunny', 'hot'],
+                weakness: '햇빛을 아주 좋아하지만 물을 제때 주지 않으면 고개를 숙입니다.',
+                fortuneGood: '태양처럼 빛나는 에너지가 당신을 감쌉니다! 어디를 가든 주목받고 좋은 성과를 얻게 됩니다.',
+                luckyColor: '선샤인 옐로우', luckyItem: '선글라스'
+            },
+            {
+                id: 'clover', category: '꽃', name: '네잎클로버',
+                successImg: 'images/plant_clover_success.png',
+                failedImg: 'images/plant_clover_failed.png',
+                waterSafe: [45, 75], sunSafe: [35, 65], fertSafe: [35, 65],
+                weatherPref: ['cloudy', 'mild', 'rainy'],
+                weakness: '섬세해서 급격한 환경 변화나 강한 직사광선에 약합니다.',
+                fortuneGood: '기적 같은 행운이 찾아오는 대길(大吉)의 날! 우연한 계기로 뜻밖의 기쁜 소식을 듣게 됩니다.',
+                luckyColor: '에메랄드 그린', luckyItem: '동전 지갑'
+            },
+
+            // [관엽식물]
+            {
+                id: 'monstera', category: '관엽식물', name: '몬스테라',
+                successImg: 'images/plant_monstera_success.png',
+                failedImg: 'images/plant_monstera_failed.png',
+                waterSafe: [40, 70], sunSafe: [30, 60], fertSafe: [40, 70],
+                weatherPref: ['cloudy', 'mild'],
+                weakness: '직사광선보다는 은은한 햇빛을 선호하며 과습에 주의해야 합니다.',
+                fortuneGood: '막혔던 일이 시원하게 뚫리는 날입니다. 복잡한 문제에 대한 명쾌한 해답을 찾게 됩니다.',
+                luckyColor: '딥 포레스트', luckyItem: '머그컵'
+            },
+            {
+                id: 'succulent', category: '관엽식물', name: '다육식물',
+                successImg: 'images/plant_succulent_success.png',
+                failedImg: 'images/plant_succulent_failed.png',
+                waterSafe: [15, 45], sunSafe: [55, 85], fertSafe: [20, 50],
+                weatherPref: ['sunny', 'hot', 'mild'],
+                weakness: '물을 너무 많이 주면 뿌리가 쉽게 무르니 건조하게 키워야 합니다.',
+                fortuneGood: '꾸준히 쌓아온 노력이 단단한 결실을 맺습니다. 재물운과 안정운이 크게 상승하는 날입니다.',
+                luckyColor: '민트 그린', luckyItem: '다이어리'
+            },
+            {
+                id: 'cactus', category: '관엽식물', name: '선인장',
+                successImg: 'images/plant_cactus_success.png',
+                failedImg: 'images/plant_cactus_failed.png',
+                waterSafe: [10, 40], sunSafe: [60, 95], fertSafe: [15, 45],
+                weatherPref: ['hot', 'sunny'],
+                weakness: '물과 거름이 과하면 금방 상합니다. 햇빛을 충분히 쬐어주세요.',
+                fortuneGood: '어려운 환경 속에서도 결국 아름다운 꽃을 피워냅니다! 힘든 과제를 성공적으로 완수할 징조입니다.',
+                luckyColor: '샌드 베이지', luckyItem: '열쇠고리'
+            },
+
+            // [야채]
+            {
+                id: 'lettuce', category: '야채', name: '상추',
+                successImg: 'images/plant_lettuce_success.png',
+                failedImg: 'images/plant_lettuce_failed.png',
+                waterSafe: [50, 80], sunSafe: [35, 65], fertSafe: [45, 75],
+                weatherPref: ['mild', 'rainy', 'cloudy'],
+                weakness: '수분이 부족하면 잎이 질겨지고 벌레가 자주 꼬입니다.',
+                fortuneGood: '몸과 마음에 신선한 활력이 넘칩니다! 건강운이 아주 좋으며 대인관계도 상쾌하게 풀립니다.',
+                luckyColor: '라임 그린', luckyItem: '텀블러'
+            },
+            {
+                id: 'tomato', category: '야채', name: '방울토마토',
+                successImg: 'images/plant_tomato_success.png',
+                failedImg: 'images/plant_tomato_failed.png',
+                waterSafe: [45, 75], sunSafe: [55, 85], fertSafe: [50, 80],
+                weatherPref: ['sunny', 'mild'],
+                weakness: '햇빛과 거름이 모두 충분해야 달콤하고 붉은 열매가 열립니다.',
+                fortuneGood: '작은 씨앗이 주렁주렁 열매를 맺듯, 여러 방면에서 기분 좋은 성과들이 연달아 찾아옵니다.',
+                luckyColor: '토마토 레드', luckyItem: '이어폰'
+            },
+            {
+                id: 'carrot', category: '야채', name: '당근',
+                successImg: 'images/plant_carrot_success.png',
+                failedImg: 'images/plant_carrot_failed.png',
+                waterSafe: [40, 70], sunSafe: [45, 75], fertSafe: [40, 70],
+                weatherPref: ['mild', 'cloudy'],
+                weakness: '거름이 너무 과하면 뿌리 모양이 갈라지고 갈변할 수 있습니다.',
+                fortuneGood: '보이지 않는 곳에서 묵묵히 준비한 실력이 빛을 발합니다! 귀인의 도움이나 좋은 제안을 받을 수 있습니다.',
+                luckyColor: '캐롯 오렌지', luckyItem: '손목시계'
+            },
+
+            // [과일]
+            {
+                id: 'strawberry', category: '과일', name: '딸기',
+                successImg: 'images/plant_strawberry_success.png',
+                failedImg: 'images/plant_strawberry_failed.png',
+                waterSafe: [50, 80], sunSafe: [45, 75], fertSafe: [50, 80],
+                weatherPref: ['mild', 'sunny'],
+                weakness: '온도와 습도에 민감하고 해충이 잘 생기므로 세심한 관리가 필요합니다.',
+                fortuneGood: '달콤한 설렘과 행운이 가득한 하루! 연애운과 인기운이 최고조에 달해 어디서든 환영받습니다.',
+                luckyColor: '스트로베리 핑크', luckyItem: '핸드크림'
+            },
+            {
+                id: 'lemon', category: '과일', name: '레몬',
+                successImg: 'images/plant_lemon_success.png',
+                failedImg: 'images/plant_lemon_failed.png',
+                waterSafe: [40, 70], sunSafe: [60, 90], fertSafe: [45, 75],
+                weatherPref: ['sunny', 'hot'],
+                weakness: '일조량이 부족하면 열매가 제대로 익지 않고 신맛만 강해집니다.',
+                fortuneGood: '톡 쏘는 아이디어와 창의력이 샘솟는 날! 새로운 기획이나 학업에서 뛰어난 영감을 얻게 됩니다.',
+                luckyColor: '레몬 옐로우', luckyItem: '노트북/펜'
+            },
+            {
+                id: 'grape', category: '과일', name: '포도',
+                successImg: 'images/plant_grape_success.png',
+                failedImg: 'images/plant_grape_failed.png',
+                waterSafe: [45, 75], sunSafe: [50, 80], fertSafe: [45, 75],
+                weatherPref: ['mild', 'sunny', 'cloudy'],
+                weakness: '균형 잡힌 관리가 중요하며, 벌레를 방치하면 열매 품질이 크게 떨어집니다.',
+                fortuneGood: '그동안 공들였던 인간관계나 프로젝트에서 알차고 풍성한 결실을 거두게 되는 날입니다.',
+                luckyColor: '로열 퍼플', luckyItem: '에코백'
+            }
         ];
 
-        let gameState = {
-            region: "서울",
-            plant: null,
-            water: 50,
-            sun: 50,
-            timeLeft: 75, // 1분 15초
-            timerId: null,
-            bugActive: false,
-            bugType: null,
-            score: 0
+        // 2. 지역별 스마트 날씨 시뮬레이터 데이터
+        const REGIONS = {
+            seoul: { name: '서울특별시', tempOffset: 0 },
+            busan: { name: '부산광역시', tempOffset: 3 },
+            daejeon: { name: '대전광역시', tempOffset: 1 },
+            jeju: { name: '제주특별자치도', tempOffset: 4 },
+            gangneung: { name: '강원 강릉시', tempOffset: -1 }
         };
 
-        // 초기 실행 시 일일 제한 체크
-        window.addEventListener('DOMContentLoaded', () => {
-            checkDailyLimit();
-        });
-
-        document.getElementById('start-btn').addEventListener('click', startGame);
-
-        function checkDailyLimit() {
-            const lastPlayed = localStorage.getItem('mint_garden_last_played');
-            const today = new Date().toISOString().slice(0, 10);
-            if (lastPlayed === today) {
-                document.getElementById('start-btn').disabled = true;
-                document.getElementById('limit-msg').classList.remove('hidden');
+        const WEATHER_TYPES = {
+            sunny: {
+                code: 'sunny', label: '☀️ 맑음',
+                desc: '햇살이 따사롭고 화창합니다. 일조량이 빠르게 오르고 수분이 다소 빨리 증발합니다.',
+                waterDrift: -1.6, sunDrift: +1.8, fertDrift: -0.9
+            },
+            hot: {
+                code: 'hot', label: '🔥 무더위/강한 햇빛',
+                desc: '강렬한 햇빛이 내리쬐는 날입니다! 차광막을 적절히 사용하고 물을 자주 챙겨주세요.',
+                waterDrift: -2.3, sunDrift: +2.6, fertDrift: -1.1
+            },
+            cloudy: {
+                code: 'cloudy', label: '☁️ 구름 많음',
+                desc: '구름이 햇빛을 부드럽게 가려줍니다. 수분 유지가 쉽지만 햇빛이 부족해질 수 있습니다.',
+                waterDrift: -1.0, sunDrift: -1.2, fertDrift: -0.8
+            },
+            rainy: {
+                code: 'rainy', label: '🌧️ 촉촉한 비',
+                desc: '촉촉한 단비가 내립니다. 수분이 자연적으로 공급되니 과습과 일조량 부족을 주의하세요!',
+                waterDrift: +1.1, sunDrift: -1.8, fertDrift: -1.0
+            },
+            mild: {
+                code: 'mild', label: '🍃 선선하고 쾌청함',
+                desc: '식물이 자라기에 더없이 완벽한 바람과 햇살이 부는 축복받은 날씨입니다.',
+                waterDrift: -1.2, sunDrift: +0.6, fertDrift: -0.8
             }
+        };
+
+        // 3. 전역 상태 변수 및 로컬스토리지 키
+        const STORAGE_KEY_DAILY = 'mint_garden_daily_v2';
+        const STORAGE_KEY_DEX = 'mint_garden_dex_v2';
+
+        const GAME_DURATION = 75; // 75초 (1분 15초)
+        let currentWeather = WEATHER_TYPES.mild;
+        let currentTemp = 20;
+        let selectedPlant = null;
+
+        let tickInterval = null;
+        let timeLeft = GAME_DURATION;
+        let isPlaying = false;
+
+        let stats = { water: 50, sun: 50, fert: 50 };
+        let isShadeOn = false;
+        let scoreAccumulator = 0;
+        let totalTicks = 0;
+        let pestDamage = 0;
+        let activePests = 0;
+
+        // 4. 초기화 및 이벤트 바인딩
+        function getTodayString() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
         }
 
-        function resetDailyLimit() {
-            localStorage.removeItem('mint_garden_last_played');
-            alert('테스트용 기록이 초기화되었습니다. 다시 시작할 수 있습니다!');
-            location.reload();
+        function initApp() {
+            document.getElementById('header-date').textContent = getTodayString() + ' 가드닝 일지';
+
+            document.getElementById('tab-garden').addEventListener('click', () => switchTab('garden'));
+            document.getElementById('tab-dex').addEventListener('click', () => switchTab('dex'));
+            document.getElementById('region-select').addEventListener('change', changeRegion);
+            document.getElementById('btn-start-grow').addEventListener('click', startGrowing);
+
+            document.getElementById('btn-water').addEventListener('click', actionWater);
+            document.getElementById('btn-shade').addEventListener('click', actionToggleShade);
+            document.getElementById('btn-fertilize').addEventListener('click', actionFertilize);
+
+            document.getElementById('btn-save-image').addEventListener('click', downloadCardImage);
+            document.getElementById('btn-open-dex').addEventListener('click', () => switchTab('dex'));
+
+            document.getElementById('dev-fast-btn').addEventListener('click', fastForwardTest);
+            document.getElementById('dev-reset-btn').addEventListener('click', resetForDeveloper);
+
+            updateDexUI();
+            changeRegion();
+            checkDailyStatus();
         }
 
-        function startGame() {
-            const regionSelect = document.getElementById('region-select');
-            gameState.region = regionSelect.value;
-            
-            // 랜덤 식물 배정
-            gameState.plant = plantDatabase[Math.floor(Math.random() * plantDatabase.length)];
-            gameState.water = 50;
-            gameState.sun = 50;
-            gameState.timeLeft = 75;
-            gameState.score = 50;
-
-            // 화면 전환
-            document.getElementById('screen-start').classList.add('hidden');
-            document.getElementById('screen-game').classList.remove('hidden');
-            document.getElementById('game-location-info').innerText = `📍 ${gameState.region} · ☀️ 22°C`;
-
-            // 게임 타이머 및 루프 시작
-            runGameLoop();
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
         }
 
-        function runGameLoop() {
-            const plantImg = document.getElementById('plant-img');
-            const statusDesc = document.getElementById('status-desc');
-            const timerDisplay = document.getElementById('timer-display');
+        function changeRegion() {
+            if (isPlaying) {
+                showToast('식물을 키우는 도중에는 지역을 변경할 수 없습니다!');
+                return;
+            }
+            const regionKey = document.getElementById('region-select').value;
+            const regionInfo = REGIONS[regionKey] || REGIONS.seoul;
+            const dateStr = getTodayString();
 
-            gameState.timerId = setInterval(() => {
-                gameState.timeLeft--;
-                
-                let min = Math.floor(gameState.timeLeft / 60);
-                let sec = gameState.timeLeft % 60;
-                timerDisplay.innerText = `남은 시간: ${min}:${sec < 10 ? '0' : ''}${sec}`;
+            let hash = 0;
+            const seedStr = dateStr + '_' + regionKey;
+            for (let i = 0; i < seedStr.length; i++) {
+                hash = ((hash << 5) - hash) + seedStr.charCodeAt(i);
+                hash |= 0;
+            }
+            const absHash = Math.abs(hash);
 
-                // 단계별 이미지 변경 (공용 이미지 활용)
-                if (gameState.timeLeft === 50) {
-                    plantImg.src = "images/stage_seed.png";
-                    statusDesc.innerText = "씨앗에서 싹이 트고 있습니다!";
-                } else if (gameState.timeLeft === 25) {
-                    plantImg.src = "images/stage_sprout.png";
-                    statusDesc.innerText = "무럭무럭 자라나는 중입니다!";
+            const month = new Date().getMonth() + 1;
+            let baseTemp = 18;
+            if (month >= 6 && month <= 8) baseTemp = 28;
+            else if (month >= 12 || month <= 2) baseTemp = 5;
+            else if (month >= 3 && month <= 5) baseTemp = 17;
+            else baseTemp = 16;
+
+            currentTemp = baseTemp + regionInfo.tempOffset + ((absHash % 7) - 3);
+
+            const weatherKeys = Object.keys(WEATHER_TYPES);
+            let chosenKey = weatherKeys[absHash % weatherKeys.length];
+            if (currentTemp >= 30) chosenKey = 'hot';
+            if (currentTemp <= 8 && chosenKey === 'hot') chosenKey = 'cloudy';
+
+            currentWeather = WEATHER_TYPES[chosenKey];
+
+            document.getElementById('weather-badge').textContent = `${currentWeather.label} · ${currentTemp}°C`;
+            document.getElementById('weather-desc').textContent = currentWeather.desc;
+        }
+
+        function checkDailyStatus() {
+            const saved = localStorage.getItem(STORAGE_KEY_DAILY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.date === getTodayString() && data.result) {
+                        renderResultCard(data.result);
+                        showGardenState('result');
+                        return;
+                    }
+                } catch (e) {
+                    console.error(e);
                 }
-
-                // 게이지 자연 감소
-                gameState.water = Math.max(0, gameState.water - 0.8);
-                gameState.sun = Math.max(0, gameState.sun - 0.6);
-                updateGauges();
-
-                // 랜덤 벌레 출몰 (남은 시간 40초 ~ 15초 사이)
-                if (gameState.timeLeft === 40 && !gameState.bugActive) {
-                    spawnBug();
-                }
-
-                // 종료 조건
-                if (gameState.timeLeft <= 0) {
-                    clearInterval(gameState.timerId);
-                    finishGame();
-                }
-            }, 1000);
+            }
+            showGardenState('idle');
         }
 
-        function updateGauges() {
-            document.getElementById('water-bar').style.width = gameState.water + '%';
-            document.getElementById('water-val').innerText = Math.round(gameState.water) + '%';
-            document.getElementById('sun-bar').style.width = gameState.sun + '%';
-            document.getElementById('sun-val').innerText = Math.round(gameState.sun) + '%';
+        function showGardenState(stateName) {
+            document.getElementById('state-idle').classList.add('hidden');
+            document.getElementById('state-playing').classList.add('hidden');
+            document.getElementById('state-result').classList.add('hidden');
+
+            document.getElementById(`state-${stateName}`).classList.remove('hidden');
         }
 
-        function addWater() {
-            gameState.water = Math.min(100, gameState.water + 15);
-            updateGauges();
-        }
+        // 5. 육성 시작 및 실시간 루프 (75초)
+        function startGrowing() {
+            if (isPlaying) return;
 
-        function toggleSun() {
-            gameState.sun = Math.min(100, gameState.sun + 20);
-            updateGauges();
-        }
-
-        function addFertilizer() {
-            gameState.water = Math.min(100, gameState.water + 5);
-            gameState.sun = Math.min(100, gameState.sun + 5);
-            updateGauges();
-        }
-
-        function spawnBug() {
-            gameState.bugActive = true;
-            const bugs = ['images/bug_aphid.png', 'images/bug_caterpillar.png', 'images/bug_snail.png'];
-            const chosenBug = bugs[Math.floor(Math.random() * bugs.length)];
-            
-            const bugDiv = document.getElementById('bug-container');
-            bugDiv.innerHTML = `<img src="${chosenBug}" class="bug-obj" style="top: 20px; right: 20px;" onclick="removeBug()" alt="해충">`;
-            document.getElementById('status-desc').innerText = "⚠️ 경고! 해충이 나타났습니다! 빨리 클릭해서 잡으세요!";
-        }
-
-        function removeBug() {
-            document.getElementById('bug-container').innerHTML = '';
-            gameState.bugActive = false;
-            gameState.score += 20;
-            document.getElementById('status-desc').innerText = "벌레를 퇴치했습니다! 안전해요.";
-        }
-
-        function finishGame() {
-            // 오늘 날짜 저장 (일일 제한)
-            const today = new Date().toISOString().slice(0, 10);
-            localStorage.setItem('mint_garden_last_played', today);
-
-            document.getElementById('screen-game').classList.add('hidden');
-            document.getElementById('screen-result').classList.remove('hidden');
-
-            // 최종 성공/실패 판정 (수분/햇빛 평균치 기준)
-            const avgState = (gameState.water + gameState.sun) / 2;
-            const isSuccess = avgState >= 30 && !gameState.bugActive;
-
-            const resultImg = document.getElementById('result-plant-img');
-            const resultTitle = document.getElementById('result-title');
-            const resultFortune = document.getElementById('result-fortune');
-
-            if (isSuccess) {
-                resultImg.src = gameState.plant.success;
-                resultTitle.innerText = `[육성 성공: 상태 좋음] ${gameState.plant.name}`;
-                resultTitle.style.color = "var(--primary-color)";
+            const preferred = PLANTS_DB.filter(p => p.weatherPref.includes(currentWeather.code));
+            if (preferred.length > 0 && Math.random() < 0.7) {
+                selectedPlant = preferred[Math.floor(Math.random() * preferred.length)];
             } else {
-                resultImg.src = gameState.plant.failed;
-                resultTitle.innerText = `[육성 실패: 시듦] ${gameState.plant.name}`;
-                resultTitle.style.color = "#d32f2f";
+                selectedPlant = PLANTS_DB[Math.floor(Math.random() * PLANTS_DB.length)];
             }
 
-            resultFortune.innerHTML = `<strong>🌱 [${gameState.region} 민트가든 운세]</strong><br>${gameState.plant.fortune}`;
+            stats.water = Math.round((selectedPlant.waterSafe[0] + selectedPlant.waterSafe[1]) / 2);
+            stats.sun = Math.round((selectedPlant.sunSafe[0] + selectedPlant.sunSafe[1]) / 2);
+            stats.fert = Math.round((selectedPlant.fertSafe[0] + selectedPlant.fertSafe[1]) / 2);
+
+            timeLeft = GAME_DURATION;
+            isPlaying = true;
+            isShadeOn = false;
+            scoreAccumulator = 0;
+            totalTicks = 0;
+            pestDamage = 0;
+            activePests = 0;
+
+            const regionKey = document.getElementById('region-select').value;
+            const regionName = (REGIONS[regionKey] || REGIONS.seoul).name;
+            
+            // 수확 전까지는 어떤 식물인지 비공개 (카테고리만 힌트로 제공)
+            document.getElementById('plant-category-badge').textContent = `비밀 ${selectedPlant.category} 씨앗`;
+            document.getElementById('playing-region-badge').textContent = `📍 ${regionName}`;
+            document.getElementById('stage-weather-badge').textContent = `📍 ${regionName} · ${currentWeather.label.split(' ')[0]} ${currentTemp}°C`;
+            document.getElementById('pest-layer').innerHTML = '';
+
+            updateShadeUI();
+            setupSafeZoneBars();
+            updatePlayingUI();
+
+            showGardenState('playing');
+            document.getElementById('dev-fast-btn').classList.remove('hidden');
+            showToast(`식물 키우기를 시작합니다! 정성껏 돌봐주세요.`);
+
+            clearInterval(tickInterval);
+            tickInterval = setInterval(gameTick, 1000);
         }
 
+        function setupSafeZoneBars() {
+            const setZone = (elId, range) => {
+                const el = document.getElementById(elId);
+                el.style.left = range[0] + '%';
+                el.style.width = (range[1] - range[0]) + '%';
+            };
+            setZone('water-safe-zone', selectedPlant.waterSafe);
+            setZone('sun-safe-zone', selectedPlant.sunSafe);
+            setZone('fert-safe-zone', selectedPlant.fertSafe);
+        }
+
+        function gameTick() {
+            if (!isPlaying) return;
+
+            timeLeft--;
+            totalTicks++;
+
+            stats.water = clamp(stats.water + currentWeather.waterDrift, 0, 100);
+            
+            let sunChange = currentWeather.sunDrift;
+            if (isShadeOn) {
+                sunChange = -2.2;
+            }
+            stats.sun = clamp(stats.sun + sunChange, 0, 100);
+            stats.fert = clamp(stats.fert + currentWeather.fertDrift, 0, 100);
+
+            let tickScore = 0;
+            if (inRange(stats.water, selectedPlant.waterSafe)) tickScore += 1;
+            if (inRange(stats.sun, selectedPlant.sunSafe)) tickScore += 1;
+            if (inRange(stats.fert, selectedPlant.fertSafe)) tickScore += 1;
+            scoreAccumulator += tickScore;
+
+            // 돌발 해충 출몰 (준비한 3종 png 사용)
+            if (timeLeft > 8 && timeLeft < GAME_DURATION - 5 && activePests < 3 && Math.random() < 0.14) {
+                spawnPest();
+            }
+
+            if (activePests > 0) {
+                pestDamage += activePests * 1.8;
+            }
+
+            updatePlayingUI();
+
+            if (timeLeft <= 0) {
+                finishGrowing();
+            }
+        }
+
+        // 6. 사용자 상호작용
+        function actionWater() {
+            if (!isPlaying) return;
+            stats.water = clamp(stats.water + 18, 0, 100);
+            spawnFloatingEffect('💧');
+            updatePlayingUI();
+        }
+
+        function actionToggleShade() {
+            if (!isPlaying) return;
+            isShadeOn = !isShadeOn;
+            updateShadeUI();
+            spawnFloatingEffect(isShadeOn ? '☂️' : '☀️');
+        }
+
+        function actionFertilize() {
+            if (!isPlaying) return;
+            stats.fert = clamp(stats.fert + 20, 0, 100);
+            spawnFloatingEffect('✨');
+            updatePlayingUI();
+        }
+
+        function updateShadeUI() {
+            const overlay = document.getElementById('shade-overlay');
+            const btnText = document.getElementById('btn-shade-text');
+            const btn = document.getElementById('btn-shade');
+
+            if (isShadeOn) {
+                overlay.classList.remove('hidden');
+                btnText.textContent = '차광막 끄기';
+                btn.classList.replace('bg-amber-50', 'bg-stone-700');
+                btnText.classList.replace('text-amber-900', 'text-white');
+            } else {
+                overlay.classList.add('hidden');
+                btnText.textContent = '차광막 켜기';
+                btn.classList.replace('bg-stone-700', 'bg-amber-50');
+                btnText.classList.replace('text-white', 'text-amber-900');
+            }
+        }
+
+        // 준비한 벌레 3종 PNG 이미지로 돌발 해충 생성
+        function spawnPest() {
+            activePests++;
+            const pestLayer = document.getElementById('pest-layer');
+            const pestEl = document.createElement('button');
+            pestEl.type = 'button';
+            
+            const bugImages = ['images/bug_aphid.png', 'images/bug_caterpillar.png', 'images/bug_snail.png'];
+            const chosenBug = bugImages[Math.floor(Math.random() * bugImages.length)];
+            
+            pestEl.innerHTML = `<img src="${chosenBug}" alt="해충" class="w-11 h-11 object-contain drop-shadow-md" onerror="this.outerHTML='<span class=\\'text-3xl\\'>🐛</span>'">`;
+            pestEl.className = 'absolute pest-wiggle pointer-events-auto p-1 focus:outline-none';
+            
+            const leftPct = 24 + Math.floor(Math.random() * 48);
+            const topPct = 32 + Math.floor(Math.random() * 32);
+            pestEl.style.left = leftPct + '%';
+            pestEl.style.top = topPct + '%';
+
+            pestEl.addEventListener('click', function (e) {
+                e.stopPropagation();
+                pestEl.remove();
+                activePests = Math.max(0, activePests - 1);
+                spawnFloatingEffect('💥');
+                showToast('벌레를 퇴치했습니다! 👍');
+                updatePlayingUI();
+            });
+
+            pestLayer.appendChild(pestEl);
+            showToast('⚠️ 해충이 나타났어요! 터치해서 잡으세요!');
+        }
+
+        function spawnFloatingEffect(emoji) {
+            const layer = document.getElementById('effect-layer');
+            const el = document.createElement('span');
+            el.textContent = emoji;
+            el.className = 'text-4xl effect-float absolute';
+            layer.appendChild(el);
+            setTimeout(() => el.remove(), 900);
+        }
+
+        // 7. 실시간 UI 업데이트 (공용 땅 -> 씨앗 -> 새싹 단계 적용)
+        function updatePlayingUI() {
+            const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+            const secs = String(timeLeft % 60).padStart(2, '0');
+            document.getElementById('timer-display').textContent = `${mins}:${secs}`;
+
+            const progress = ((GAME_DURATION - timeLeft) / GAME_DURATION) * 100;
+            document.getElementById('growth-progress').style.width = `${progress}%`;
+
+            const plantImgEl = document.getElementById('plant-img');
+            const titleEl = document.getElementById('plant-stage-title');
+
+            // 완성 전까지는 공용 이미지로 정체를 숨김
+            if (progress < 25) {
+                if (!plantImgEl.src.endsWith('soil_base.png')) plantImgEl.src = 'images/soil_base.png';
+                titleEl.textContent = '1단계: 촉촉한 흙에 씨앗 심기';
+            } else if (progress < 60) {
+                if (!plantImgEl.src.endsWith('stage_seed.png')) plantImgEl.src = 'images/stage_seed.png';
+                titleEl.textContent = '2단계: 씨앗이 움트고 있어요';
+            } else {
+                if (!plantImgEl.src.endsWith('stage_sprout.png')) plantImgEl.src = 'images/stage_sprout.png';
+                titleEl.textContent = '3단계: 새싹이 무럭무럭 자라는 중!';
+            }
+
+            const warnings = [];
+            updateSingleGauge('water', stats.water, selectedPlant.waterSafe, '💧 수분 부족!', '🌊 과습 주의!', warnings);
+            updateSingleGauge('sun', stats.sun, selectedPlant.sunSafe, '☁️ 햇빛 부족!', '🔥 잎이 타고 있어요!', warnings);
+            updateSingleGauge('fert', stats.fert, selectedPlant.fertSafe, '🧪 영양 부족!', '⚠️ 영양 과다!', warnings);
+
+            if (activePests > 0) {
+                warnings.unshift(`🐛 벌레 출몰 (${activePests}마리)!`);
+            }
+
+            const alertEl = document.getElementById('status-alert');
+            if (warnings.length > 0) {
+                alertEl.textContent = warnings[0];
+                alertEl.classList.remove('hidden');
+            } else {
+                alertEl.classList.add('hidden');
+            }
+        }
+
+        function updateSingleGauge(type, val, safeRange, lowMsg, highMsg, warnings) {
+            const bar = document.getElementById(`${type}-bar`);
+            const text = document.getElementById(`${type}-val-text`);
+            const rounded = Math.round(val);
+
+            bar.style.width = `${rounded}%`;
+
+            if (val < safeRange[0]) {
+                text.textContent = `부족 (${rounded}%)`;
+                text.className = 'text-rose-500 font-bold';
+                warnings.push(lowMsg);
+            } else if (val > safeRange[1]) {
+                text.textContent = `과다 (${rounded}%)`;
+                text.className = 'text-rose-500 font-bold';
+                warnings.push(highMsg);
+            } else {
+                text.textContent = `적정 (${rounded}%)`;
+                text.className = 'text-emerald-600 font-bold';
+            }
+        }
+
+        // 8. 수확 판정 (육성: 상태 좋음 / 육성 실패 2분할) 및 운세 생성
+        function finishGrowing() {
+            clearInterval(tickInterval);
+            isPlaying = false;
+            document.getElementById('dev-fast-btn').classList.add('hidden');
+
+            const maxPossibleScore = Math.max(1, totalTicks * 3);
+            let rawPercent = (scoreAccumulator / maxPossibleScore) * 100;
+            let finalScore = Math.max(0, Math.round(rawPercent - pestDamage));
+
+            const isFailed = (
+                stats.water <= 5 || stats.water >= 96 ||
+                stats.sun <= 5 || stats.sun >= 96 ||
+                stats.fert <= 5 || stats.fert >= 96 ||
+                activePests > 0 ||
+                finalScore < 35
+            );
+
+            let statusLabel = '';
+            let harvestImg = '';
+            let harvestComment = '';
+            let fortuneText = '';
+
+            if (isFailed) {
+                statusLabel = '육성 실패';
+                harvestImg = selectedPlant.failedImg;
+                harvestComment = activePests > 0
+                    ? '해충을 제때 잡지 못해 식물이 시들어버렸습니다.'
+                    : `${selectedPlant.weakness}`;
+                fortuneText = '오늘은 욕심을 내려놓고 잠시 쉬어가라는 신호입니다. 무리한 계획보다는 주변을 정돈하며 내일을 기약하세요.';
+            } else {
+                statusLabel = '육성: 상태 좋음';
+                harvestImg = selectedPlant.successImg;
+                harvestComment = '완벽한 수분과 햇빛 밸런스로 아주 건강하게 키워냈습니다!';
+                fortuneText = selectedPlant.fortuneGood;
+            }
+
+            const regionKey = document.getElementById('region-select').value;
+            const regionName = (REGIONS[regionKey] || REGIONS.seoul).name;
+
+            const resultObj = {
+                plantId: selectedPlant.id,
+                category: selectedPlant.category,
+                plantName: selectedPlant.name,
+                imgSrc: harvestImg,
+                statusLabel: statusLabel,
+                isFailed: isFailed,
+                comment: harvestComment,
+                fortune: fortuneText,
+                luckyColor: selectedPlant.luckyColor,
+                luckyItem: selectedPlant.luckyItem,
+                region: regionName
+            };
+
+            localStorage.setItem(STORAGE_KEY_DAILY, JSON.stringify({
+                date: getTodayString(),
+                result: resultObj
+            }));
+
+            if (!isFailed) {
+                saveToDex(selectedPlant.id);
+            }
+
+            renderResultCard(resultObj);
+            showGardenState('result');
+        }
+
+        function renderResultCard(res) {
+            const card = document.getElementById('fortune-card');
+            const badge = document.getElementById('res-status-badge');
+            const commentEl = document.getElementById('res-harvest-comment');
+
+            card.classList.remove('status-good-glow');
+            if (!res.isFailed) {
+                card.classList.add('status-good-glow');
+                badge.className = 'text-xs font-black px-3 py-1 rounded-full bg-emerald-500 text-white shadow-sm';
+                commentEl.className = 'text-xs text-emerald-700 font-medium mt-1';
+            } else {
+                badge.className = 'text-xs font-black px-3 py-1 rounded-full bg-rose-500 text-white shadow-sm';
+                commentEl.className = 'text-xs text-rose-600 font-medium mt-1';
+            }
+
+            document.getElementById('res-category').textContent = `${res.category} · ${res.region}`;
+            badge.textContent = res.statusLabel;
+            document.getElementById('res-plant-img').src = res.imgSrc;
+            document.getElementById('res-plant-name').textContent = res.plantName;
+            commentEl.textContent = res.comment;
+            document.getElementById('res-fortune-text').textContent = res.fortune;
+            document.getElementById('res-lucky-color').textContent = res.luckyColor;
+            document.getElementById('res-lucky-item').textContent = res.luckyItem;
+        }
+
+        // html2canvas를 이용한 실제 카드 이미지 다운로드
         function downloadCardImage() {
-            alert('운세 카드 저장 기능은 추후 캡처 라이브러리와 연동하여 제공될 예정입니다! 현재 화면을 캡처하거나 공유해보세요.');
+            const cardElement = document.getElementById('fortune-card');
+            showToast('운세 카드를 이미지로 저장하는 중...');
+
+            html2canvas(cardElement, {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `MINT_GARDEN_${getTodayString()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast('이미지가 저장되었습니다! 📸');
+            }).catch(err => {
+                console.error(err);
+                showToast('이미지 저장 중 오류가 발생했습니다.');
+            });
+        }
+
+        // 9. 식물 도감 (Collection) 관리
+        function saveToDex(plantId) {
+            let dex = {};
+            try {
+                dex = JSON.parse(localStorage.getItem(STORAGE_KEY_DEX)) || {};
+            } catch (e) { dex = {}; }
+
+            dex[plantId] = true;
+            localStorage.setItem(STORAGE_KEY_DEX, JSON.stringify(dex));
+            updateDexUI();
+        }
+
+        function updateDexUI() {
+            let dex = {};
+            try {
+                dex = JSON.parse(localStorage.getItem(STORAGE_KEY_DEX)) || {};
+            } catch (e) { dex = {}; }
+
+            const collectedCount = Object.keys(dex).length;
+            document.getElementById('dex-count').textContent = collectedCount;
+            document.getElementById('dex-progress-text').textContent = `${collectedCount} / ${PLANTS_DB.length} 수집`;
+
+            const grid = document.getElementById('dex-grid');
+            grid.innerHTML = '';
+
+            PLANTS_DB.forEach(plant => {
+                const isUnlocked = Boolean(dex[plant.id]);
+
+                const item = document.createElement('div');
+                item.className = `rounded-2xl p-3 text-center border transition flex flex-col items-center ${
+                    isUnlocked
+                        ? 'bg-emerald-50/60 border-emerald-200 shadow-sm'
+                        : 'bg-stone-50 border-stone-100 opacity-60'
+                }`;
+
+                item.innerHTML = `
+                    <div class="w-14 h-14 flex items-center justify-center mb-1">
+                        ${isUnlocked
+                            ? `<img src="${plant.successImg}" alt="${plant.name}" class="w-12 h-12 object-contain">`
+                            : `<span class="text-2xl">❓</span>`
+                        }
+                    </div>
+                    <div class="text-xs font-bold text-stone-800 truncate w-full">${isUnlocked ? plant.name : '미발견'}</div>
+                    <div class="text-[10px] text-stone-400 mb-1">${plant.category}</div>
+                    <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        isUnlocked ? 'bg-emerald-200 text-emerald-900' : 'bg-stone-200 text-stone-500'
+                    }">
+                        ${isUnlocked ? '수확 완료' : '잠김'}
+                    </span>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        // 10. 탭 전환 & 개발자 테스트 도구
+        function switchTab(tabName) {
+            const gardenView = document.getElementById('view-garden');
+            const dexView = document.getElementById('view-dex');
+            const tabGarden = document.getElementById('tab-garden');
+            const tabDex = document.getElementById('tab-dex');
+
+            if (tabName === 'garden') {
+                gardenView.classList.remove('hidden');
+                dexView.classList.add('hidden');
+                tabGarden.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm transition';
+                tabDex.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition';
+            } else {
+                updateDexUI();
+                gardenView.classList.add('hidden');
+                dexView.classList.remove('hidden');
+                tabDex.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm transition';
+                tabGarden.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition';
+            }
+        }
+
+        function resetForDeveloper() {
+            clearInterval(tickInterval);
+            isPlaying = false;
+            localStorage.removeItem(STORAGE_KEY_DAILY);
+            document.getElementById('dev-fast-btn').classList.add('hidden');
+            showGardenState('idle');
+            showToast('🛠️ [개발자 모드] 오늘의 참여 제한이 초기화되었습니다!');
+        }
+
+        function fastForwardTest() {
+            if (!isPlaying) return;
+            timeLeft = 5;
+            updatePlayingUI();
+            showToast('⏩ 테스트를 위해 남은 시간을 5초로 단축했습니다.');
+        }
+
+        function clamp(val, min, max) {
+            return Math.min(Math.max(val, min), max);
+        }
+
+        function inRange(val, range) {
+            return val >= range[0] && val <= range[1];
+        }
+
+        let toastTimeout = null;
+        function showToast(msg) {
+            const toast = document.getElementById('toast-msg');
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2200);
         }
     </script>
 </body>
