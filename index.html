@@ -97,7 +97,7 @@
         <!-- [탭 1] 정원 화면 -->
         <section id="view-garden" class="space-y-4">
             
-            <!-- 1. 오늘의 지역 날씨 위젯 (지도 북->남 순서 배치) -->
+            <!-- 1. 오늘의 지역 날씨 위젯 -->
             <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-sm border border-emerald-100">
                 <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-1.5">
@@ -259,10 +259,10 @@
                 <!-- 캡처 대상 카드 영역 -->
                 <div id="fortune-card" class="bg-white rounded-3xl p-6 shadow-lg border border-emerald-200 text-center space-y-4 relative overflow-hidden">
                     
-                    <!-- 상태 뱃지 (지역명 제거 및 수직 정렬 완료) -->
+                    <!-- [수정됨] 상단 뱃지 2개: 세로 높이(h-7)와 내부 정렬(flex items-center)을 엄격히 고정하여 캡처 오차 원천 차단 -->
                     <div class="flex items-center justify-between">
-                        <span id="res-category" class="text-xs font-bold px-3 py-1 rounded-full bg-stone-100 text-stone-600 inline-flex items-center h-7">과일</span>
-                        <span id="res-status-badge" class="text-xs font-black px-3 py-1 rounded-full bg-emerald-500 text-white shadow-sm inline-flex items-center h-7">
+                        <span id="res-category" class="text-xs font-bold px-3 py-0.5 rounded-full bg-stone-100 text-stone-600 inline-flex items-center justify-center h-7 leading-none">과일 · 서울특별시</span>
+                        <span id="res-status-badge" class="text-xs font-black px-3 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm inline-flex items-center justify-center h-7 leading-none">
                             육성: 상태 좋음
                         </span>
                     </div>
@@ -492,7 +492,6 @@
             }
         ];
 
-        // 지도 순서(북 -> 남)로 지역 재배치 및 충청/전라 추가
         const REGIONS = {
             seoul: { name: '서울특별시', tempOffset: 0 },
             gangneung: { name: '강원 강릉시', tempOffset: -1 },
@@ -530,10 +529,10 @@
             }
         };
 
-        const STORAGE_KEY_DAILY = 'mint_garden_daily_v4';
-        const STORAGE_KEY_DEX = 'mint_garden_dex_v4';
+        const STORAGE_KEY_DAILY = 'mint_garden_daily_v5';
+        const STORAGE_KEY_DEX = 'mint_garden_dex_v5';
 
-        const GAME_DURATION = 60; // 60초(1분)로 단축
+        const GAME_DURATION = 60; // 60초 게임
         let currentWeather = WEATHER_TYPES.mild;
         let currentTemp = 20;
         let selectedPlant = null;
@@ -950,14 +949,15 @@
             card.classList.remove('status-good-glow');
             if (!res.isFailed) {
                 card.classList.add('status-good-glow');
-                badge.className = 'text-xs font-black px-3 py-1 rounded-full bg-emerald-500 text-white shadow-sm inline-flex items-center h-7';
+                badge.className = 'text-xs font-black px-3 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm inline-flex items-center justify-center h-7 leading-none';
                 commentEl.className = 'text-xs text-emerald-700 font-medium mt-1';
             } else {
-                badge.className = 'text-xs font-black px-3 py-1 rounded-full bg-rose-500 text-white shadow-sm inline-flex items-center h-7';
+                badge.className = 'text-xs font-black px-3 py-0.5 rounded-full bg-rose-500 text-white shadow-sm inline-flex items-center justify-center h-7 leading-none';
                 commentEl.className = 'text-xs text-rose-600 font-medium mt-1';
             }
 
-            document.getElementById('res-category').textContent = res.category;
+            // 카테고리와 지역명을 포함하도록 수정 반영
+            document.getElementById('res-category').textContent = `${res.category} · ${res.region}`;
             badge.textContent = res.statusLabel;
             document.getElementById('res-plant-img').src = res.imgSrc;
             document.getElementById('res-plant-name').textContent = res.plantName;
