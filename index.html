@@ -97,17 +97,18 @@
         <!-- [탭 1] 정원 화면 -->
         <section id="view-garden" class="space-y-4">
             
-            <!-- 1. 오늘의 지역 날씨 위젯 -->
+            <!-- 1. 오늘의 지역 날씨 위젯 (지도 북->남 순서 배치) -->
             <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-sm border border-emerald-100">
                 <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-1.5">
                         <span class="text-sm">📍</span>
                         <select id="region-select" class="text-sm font-bold text-stone-700 bg-stone-100 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-emerald-400">
                             <option value="seoul" selected>서울특별시</option>
-                            <option value="busan">부산광역시</option>
-                            <option value="daejeon">대전광역시</option>
-                            <option value="jeju">제주특별자치도</option>
                             <option value="gangneung">강원 강릉시</option>
+                            <option value="daejeon">대전광역시 (충청)</option>
+                            <option value="gwangju">광주광역시 (전라)</option>
+                            <option value="busan">부산광역시 (경상)</option>
+                            <option value="jeju">제주특별자치도</option>
                         </select>
                     </div>
                     <span id="weather-badge" class="text-xs font-medium px-2.5 py-1 rounded-full bg-amber-100 text-amber-800">
@@ -131,7 +132,7 @@
                     <h2 class="font-serif-kr text-2xl font-bold text-stone-800">오늘의 씨앗이 도착했어요</h2>
                     <p class="text-xs text-stone-500 leading-relaxed">
                         하루에 한 번, 실시간 날씨의 영향을 받는 나만의 식물을 심고 키워보세요.<br>
-                        <strong>75초</strong> 동안 물과 햇빛, 거름을 조절해 수확해보세요!
+                        <strong>60초</strong> 동안 물과 햇빛, 거름을 조절해 수확해보세요!
                     </p>
                 </div>
 
@@ -147,7 +148,7 @@
                 </button>
             </div>
 
-            <!-- 2-B. [육성 진행 화면] 75초 실시간 게임 플레이 -->
+            <!-- 2-B. [육성 진행 화면] 60초 실시간 게임 플레이 -->
             <div id="state-playing" class="hidden bg-white rounded-3xl p-5 shadow-md border border-emerald-100 space-y-4">
                 
                 <!-- 상단 타이머 & 현재 식물 상태 -->
@@ -161,7 +162,7 @@
                     </div>
                     <div class="text-right">
                         <span class="text-[11px] text-stone-400 block">수확까지 남은 시간</span>
-                        <span id="timer-display" class="font-mono font-bold text-xl text-emerald-600">01:15</span>
+                        <span id="timer-display" class="font-mono font-bold text-xl text-emerald-600">01:00</span>
                     </div>
                 </div>
 
@@ -258,7 +259,7 @@
                 <!-- 캡처 대상 카드 영역 -->
                 <div id="fortune-card" class="bg-white rounded-3xl p-6 shadow-lg border border-emerald-200 text-center space-y-4 relative overflow-hidden">
                     
-                    <!-- [수정됨] 상단 레이아웃: 지역명 제거, 세로 중앙 정렬(items-center) 적용 -->
+                    <!-- 상태 뱃지 (지역명 제거 및 수직 정렬 완료) -->
                     <div class="flex items-center justify-between">
                         <span id="res-category" class="text-xs font-bold px-3 py-1 rounded-full bg-stone-100 text-stone-600 inline-flex items-center h-7">과일</span>
                         <span id="res-status-badge" class="text-xs font-black px-3 py-1 rounded-full bg-emerald-500 text-white shadow-sm inline-flex items-center h-7">
@@ -491,12 +492,14 @@
             }
         ];
 
+        // 지도 순서(북 -> 남)로 지역 재배치 및 충청/전라 추가
         const REGIONS = {
             seoul: { name: '서울특별시', tempOffset: 0 },
-            busan: { name: '부산광역시', tempOffset: 3 },
+            gangneung: { name: '강원 강릉시', tempOffset: -1 },
             daejeon: { name: '대전광역시', tempOffset: 1 },
-            jeju: { name: '제주특별자치도', tempOffset: 4 },
-            gangneung: { name: '강원 강릉시', tempOffset: -1 }
+            gwangju: { name: '광주광역시', tempOffset: 2 },
+            busan: { name: '부산광역시', tempOffset: 3 },
+            jeju: { name: '제주특별자치도', tempOffset: 4 }
         };
 
         const WEATHER_TYPES = {
@@ -527,10 +530,10 @@
             }
         };
 
-        const STORAGE_KEY_DAILY = 'mint_garden_daily_v3';
-        const STORAGE_KEY_DEX = 'mint_garden_dex_v3';
+        const STORAGE_KEY_DAILY = 'mint_garden_daily_v4';
+        const STORAGE_KEY_DEX = 'mint_garden_dex_v4';
 
-        const GAME_DURATION = 75;
+        const GAME_DURATION = 60; // 60초(1분)로 단축
         let currentWeather = WEATHER_TYPES.mild;
         let currentTemp = 20;
         let selectedPlant = null;
@@ -719,7 +722,7 @@
             if (inRange(stats.fert, selectedPlant.fertSafe)) tickScore += 1;
             scoreAccumulator += tickScore;
 
-            if (timeLeft > 8 && timeLeft < GAME_DURATION - 5 && activePests < 2 && Math.random() < 0.11) {
+            if (timeLeft > 6 && timeLeft < GAME_DURATION - 4 && activePests < 2 && Math.random() < 0.12) {
                 spawnPest();
             }
 
@@ -954,7 +957,6 @@
                 commentEl.className = 'text-xs text-rose-600 font-medium mt-1';
             }
 
-            // [수정됨] 카드 상단 왼쪽: 민감한 지역명은 지우고 카테고리(예: 야채)만 깔끔하게 표시
             document.getElementById('res-category').textContent = res.category;
             badge.textContent = res.statusLabel;
             document.getElementById('res-plant-img').src = res.imgSrc;
