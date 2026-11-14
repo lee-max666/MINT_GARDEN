@@ -97,7 +97,7 @@
         <!-- [탭 1] 정원 화면 -->
         <section id="view-garden" class="space-y-4">
             
-            <!-- 1. 오늘의 지역 날씨 위젯 -->
+            <!-- 1. 오늘의 지역 날씨 위젯 (괄호 제거 완료) -->
             <div class="bg-white/90 backdrop-blur rounded-2xl p-4 shadow-sm border border-emerald-100">
                 <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-1.5">
@@ -105,9 +105,9 @@
                         <select id="region-select" class="text-sm font-bold text-stone-700 bg-stone-100 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-emerald-400">
                             <option value="seoul" selected>서울특별시</option>
                             <option value="gangneung">강원 강릉시</option>
-                            <option value="daejeon">대전광역시 (충청)</option>
-                            <option value="gwangju">광주광역시 (전라)</option>
-                            <option value="busan">부산광역시 (경상)</option>
+                            <option value="daejeon">대전광역시</option>
+                            <option value="gwangju">광주광역시</option>
+                            <option value="busan">부산광역시</option>
                             <option value="jeju">제주특별자치도</option>
                         </select>
                     </div>
@@ -184,7 +184,7 @@
                         📍 서울특별시 · ☀️ 21°C
                     </div>
 
-                    <!-- 상태 경고 뱃지 (겹침 방지를 위해 좌측 하단 배치) -->
+                    <!-- 상태 경고 뱃지 (좌측 하단 배치) -->
                     <div id="status-alert" class="hidden absolute bottom-3 left-3 z-30 bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md animate-bounce">
                         ⚠️ 수분 부족!
                     </div>
@@ -492,6 +492,7 @@
             }
         ];
 
+        // 괄호 제거 완료된 지역 리스트
         const REGIONS = {
             seoul: { name: '서울특별시', tempOffset: 0 },
             gangneung: { name: '강원 강릉시', tempOffset: -1 },
@@ -529,8 +530,8 @@
             }
         };
 
-        const STORAGE_KEY_DAILY = 'mint_garden_daily_v6';
-        const STORAGE_KEY_DEX = 'mint_garden_dex_v6';
+        const STORAGE_KEY_DAILY = 'mint_garden_daily_v7';
+        const STORAGE_KEY_DEX = 'mint_garden_dex_v7';
 
         const GAME_DURATION = 60; // 60초 게임
         let currentWeather = WEATHER_TYPES.mild;
@@ -672,7 +673,6 @@
             const regionKey = document.getElementById('region-select').value;
             const regionName = (REGIONS[regionKey] || REGIONS.seoul).name;
             
-            // 종류 유추가 불가능하도록 '비밀 씨앗'으로 통일
             document.getElementById('plant-category-badge').textContent = `비밀 씨앗`;
             document.getElementById('playing-region-badge').textContent = `📍 ${regionName}`;
             document.getElementById('stage-weather-badge').textContent = `📍 ${regionName} · ${currentWeather.label.split(' ')[0]} ${currentTemp}°C`;
