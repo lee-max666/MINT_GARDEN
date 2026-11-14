@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MINT GARDEN - 날씨 연동 식물키우기</title>
-    <!-- 민트가든 로고를 썸네일(Open Graph)로 지정 -->
+    <!-- 링크 공유 시 보여지는 썸네일 -->
     <meta property="og:title" content="MINT GARDEN - 날씨 연동 식물키우기">
     <meta property="og:description" content="실시간 날씨에 따라 나만의 식물을 키워보세요">
-    <meta property="og:image" content="images/mint_garden_logo.png">
+    <meta property="og:image" content="images/mint_thumbnail.png">
 
     <!-- Tailwind CSS & html2canvas 로드 -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -71,7 +71,7 @@
 </head>
 <body class="text-stone-800 flex flex-col items-center justify-between p-4 sm:p-6">
 
-    <!-- 상단 헤더 & 내비게이션 (로고 확대, 텍스트 제거) -->
+    <!-- 상단 헤더 & 내비게이션 (로고 이미지 지정 및 텍스트 제거) -->
     <header class="w-full max-w-md flex items-center justify-between bg-white/85 backdrop-blur-md px-5 py-3 rounded-2xl shadow-sm border border-emerald-100 mb-4">
         <div class="flex items-center gap-3">
             <img src="images/mint_garden_logo.png" alt="MINT GARDEN" class="w-11 h-11 object-contain rounded-xl" onerror="this.style.display='none'; document.getElementById('fallback-logo').classList.remove('hidden');">
@@ -174,7 +174,7 @@
                 <!-- 가드닝 화면 -->
                 <div id="pot-stage" class="relative w-full h-60 rounded-2xl overflow-hidden flex flex-col justify-end pb-5 items-center transition-colors duration-500 bg-gradient-to-b from-sky-100 via-sky-50 to-emerald-50 border border-stone-200">
                     
-                    <!-- 차광막 안내 문구 (좌측 상단으로 이동) -->
+                    <!-- 차광막 안내 문구 (왼쪽 상단 배치) -->
                     <div id="shade-overlay" class="hidden absolute top-3 left-3 bg-stone-800/90 text-white text-[11px] px-3 py-1 rounded-full shadow z-10 pointer-events-none">
                         ☂️ 차광막 작동 중
                     </div>
@@ -189,7 +189,7 @@
                         ⚠️ 수분 부족!
                     </div>
 
-                    <!-- 식물 본체 이미지 컨테이너 (아래쪽으로 내림) -->
+                    <!-- 식물 본체 이미지 컨테이너 (아래쪽 정렬) -->
                     <div id="plant-visual-container" class="relative z-20 flex items-center justify-center mt-auto mb-2">
                         <img id="plant-img" src="images/soil_base.png" alt="성장 중인 식물" class="w-40 h-40 object-contain plant-sway select-none transition-all duration-300" onerror="this.src='images/soil_base.png'">
                     </div>
@@ -528,8 +528,8 @@
             }
         };
 
-        const STORAGE_KEY_DAILY = 'mint_garden_daily_v9';
-        const STORAGE_KEY_DEX = 'mint_garden_dex_v9';
+        const STORAGE_KEY_DAILY = 'mint_garden_daily_v10';
+        const STORAGE_KEY_DEX = 'mint_garden_dex_v10';
 
         const GAME_DURATION = 60;
         let currentWeather = WEATHER_TYPES.mild;
@@ -783,7 +783,6 @@
             const bugImages = ['images/bug_aphid.png', 'images/bug_caterpillar.png', 'images/bug_snail.png'];
             const chosenBug = bugImages[Math.floor(Math.random() * bugImages.length)];
             
-            // 해충 이미지 크기를 대폭 확대 (w-24 h-24)
             pestEl.innerHTML = `<img src="${chosenBug}" alt="해충" class="w-24 h-24 object-contain drop-shadow-xl" onerror="this.outerHTML='<span class=\\'text-6xl\\'>🐛</span>'">`;
             pestEl.className = 'absolute pest-wiggle pointer-events-auto p-2 focus:outline-none';
             
