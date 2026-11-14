@@ -179,13 +179,13 @@
                         <span class="bg-stone-800/90 text-white text-[11px] px-3 py-1 rounded-full shadow">☂️ 차광막 작동 중 (햇빛 차단)</span>
                     </div>
 
-                    <!-- 선택 지역 및 날씨 배지 -->
+                    <!-- 선택 지역 및 날씨 배지 (우측 상단 유지) -->
                     <div id="stage-weather-badge" class="absolute top-3 right-3 z-30 bg-white/95 backdrop-blur-sm text-stone-800 text-[11px] font-bold px-3 py-1 rounded-full shadow border border-stone-200">
                         📍 서울특별시 · ☀️ 21°C
                     </div>
 
-                    <!-- 상태 경고 뱃지 -->
-                    <div id="status-alert" class="hidden absolute top-3 left-3 z-30 bg-rose-500 text-white text-xs font-bold px-2.5 py-1 rounded-full shadow animate-bounce">
+                    <!-- 상태 경고 뱃지 (겹침 방지를 위해 좌측 하단 배치) -->
+                    <div id="status-alert" class="hidden absolute bottom-3 left-3 z-30 bg-rose-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md animate-bounce">
                         ⚠️ 수분 부족!
                     </div>
 
@@ -259,7 +259,7 @@
                 <!-- 캡처 대상 카드 영역 -->
                 <div id="fortune-card" class="bg-white rounded-3xl p-6 shadow-lg border border-emerald-200 text-center space-y-4 relative overflow-hidden">
                     
-                    <!-- [수정됨] 상단 뱃지 2개: 세로 높이(h-7)와 내부 정렬(flex items-center)을 엄격히 고정하여 캡처 오차 원천 차단 -->
+                    <!-- 상단 뱃지 2개: 세로 높이(h-7)와 내부 정렬(flex items-center) 고정 -->
                     <div class="flex items-center justify-between">
                         <span id="res-category" class="text-xs font-bold px-3 py-0.5 rounded-full bg-stone-100 text-stone-600 inline-flex items-center justify-center h-7 leading-none">과일 · 서울특별시</span>
                         <span id="res-status-badge" class="text-xs font-black px-3 py-0.5 rounded-full bg-emerald-500 text-white shadow-sm inline-flex items-center justify-center h-7 leading-none">
@@ -529,8 +529,8 @@
             }
         };
 
-        const STORAGE_KEY_DAILY = 'mint_garden_daily_v5';
-        const STORAGE_KEY_DEX = 'mint_garden_dex_v5';
+        const STORAGE_KEY_DAILY = 'mint_garden_daily_v6';
+        const STORAGE_KEY_DEX = 'mint_garden_dex_v6';
 
         const GAME_DURATION = 60; // 60초 게임
         let currentWeather = WEATHER_TYPES.mild;
@@ -672,7 +672,8 @@
             const regionKey = document.getElementById('region-select').value;
             const regionName = (REGIONS[regionKey] || REGIONS.seoul).name;
             
-            document.getElementById('plant-category-badge').textContent = `비밀 ${selectedPlant.category} 씨앗`;
+            // 종류 유추가 불가능하도록 '비밀 씨앗'으로 통일
+            document.getElementById('plant-category-badge').textContent = `비밀 씨앗`;
             document.getElementById('playing-region-badge').textContent = `📍 ${regionName}`;
             document.getElementById('stage-weather-badge').textContent = `📍 ${regionName} · ${currentWeather.label.split(' ')[0]} ${currentTemp}°C`;
             document.getElementById('pest-layer').innerHTML = '';
@@ -956,7 +957,6 @@
                 commentEl.className = 'text-xs text-rose-600 font-medium mt-1';
             }
 
-            // 카테고리와 지역명을 포함하도록 수정 반영
             document.getElementById('res-category').textContent = `${res.category} · ${res.region}`;
             badge.textContent = res.statusLabel;
             document.getElementById('res-plant-img').src = res.imgSrc;
