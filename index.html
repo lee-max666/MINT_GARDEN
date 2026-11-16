@@ -422,3 +422,772 @@
                     '주변 환경을 산뜻하게 정리하면 대운이 트이는 날입니다. 방 청소를 추천합니다.',
                     '차분하게 내실을 다지기 좋은 하루입니다. 배움이나 독서에서 큰 깨달음을 얻습니다.'
                 ],
+                colors: ['딥 포레스트', '정글 그린', '차콜 네이비'],
+                items: ['머그컵', '식물 영양제', '디퓨저']
+            },
+            {
+                id: 'succulent', category: '관엽식물', name: '다육식물',
+                successImg: 'images/plant_succulent_success.png',
+                failedImg: 'images/plant_succulent_failed.png',
+                waterSafe: [20, 55], sunSafe: [50, 90], fertSafe: [20, 60],
+                weatherPref: ['sunny', 'hot', 'mild'],
+                weakness: '물을 너무 많이 주면 뿌리가 쉽게 무르니 건조하게 키워야 합니다.',
+                fortunes: [
+                    '꾸준히 쌓아온 노력이 단단한 결실을 맺습니다. 재물운과 안정운이 크게 상승하는 날입니다.',
+                    '불필요한 지출을 막고 알뜰하게 자산을 지키거나 불릴 수 있는 지혜가 생기는 날입니다.',
+                    '단단하고 묵묵한 태도가 주변의 깊은 신뢰를 이끌어내는 영광스러운 하루입니다.'
+                ],
+                colors: ['민트 그린', '샌디 베이지', '라벤더 그레이'],
+                items: ['다이어리', '저금통', '가죽 파우치']
+            },
+            {
+                id: 'cactus', category: '관엽식물', name: '선인장',
+                successImg: 'images/plant_cactus_success.png',
+                failedImg: 'images/plant_cactus_failed.png',
+                waterSafe: [15, 50], sunSafe: [55, 95], fertSafe: [15, 55],
+                weatherPref: ['hot', 'sunny'],
+                weakness: '물과 거름이 과하면 금방 상합니다. 햇빛을 충분히 쬐어주세요.',
+                fortunes: [
+                    '어려운 환경 속에서도 결국 아름다운 꽃을 피워냅니다! 힘든 과제를 성공적으로 완수할 징조입니다.',
+                    '강인한 멘탈과 끈기로 경쟁에서 승리하거나 원하는 목표를 당당히 달성합니다.',
+                    '시련을 이겨낸 당신에게 값진 보상과 찬사가 쏟아지는 짜릿한 하루입니다.'
+                ],
+                colors: ['샌드 베이지', '어스 브라운', '테라코타 오렌지'],
+                items: ['열쇠고리', '텀블러', '미니 캔들']
+            },
+
+            // [야채]
+            {
+                id: 'lettuce', category: '야채', name: '상추',
+                successImg: 'images/plant_lettuce_success.png',
+                failedImg: 'images/plant_lettuce_failed.png',
+                waterSafe: [45, 85], sunSafe: [30, 70], fertSafe: [40, 80],
+                weatherPref: ['mild', 'rainy', 'cloudy'],
+                weakness: '수분이 부족하면 잎이 질겨지고 해충이 자주 꼬입니다.',
+                fortunes: [
+                    '몸과 마음에 신선한 활력이 넘칩니다! 건강운이 아주 좋으며 대인관계도 상쾌하게 풀립니다.',
+                    '가볍고 상쾌한 기분으로 하루를 시작하여 모든 일이 물 흐르듯 자연스럽게 풀립니다.',
+                    '좋은 사람들과 맛있는 음식을 나누며 즐거운 추억을 만들 수 있는 소중한 날입니다.'
+                ],
+                colors: ['라임 그린', '애플 그린', '피스타치오'],
+                items: ['텀블러', '샐러드 볼', '에코백']
+            },
+            {
+                id: 'tomato', category: '야채', name: '방울토마토',
+                successImg: 'images/plant_tomato_success.png',
+                failedImg: 'images/plant_tomato_failed.png',
+                waterSafe: [40, 80], sunSafe: [50, 90], fertSafe: [45, 85],
+                weatherPref: ['sunny', 'mild'],
+                weakness: '햇빛과 거름이 모두 충분해야 달콤하고 붉은 열매가 열립니다.',
+                fortunes: [
+                    '작은 씨앗이 주렁주렁 열매를 맺듯, 여러 방면에서 기분 좋은 성과들이 연달아 찾아옵니다.',
+                    '생기발랄한 에너지로 가득 차 주변 사람들에게 해피 바이러스를 전파하는 날입니다.',
+                    '기분 좋은 만남이나 뜻밖의 달콤한 제안이 기다리고 있는 설레는 하루입니다.'
+                ],
+                colors: ['토마토 레드', '체리 핑크', '만다린 오렌지'],
+                items: ['이어폰', '스마트폰 거치대', '미니 미러']
+            },
+            {
+                id: 'carrot', category: '야채', name: '당근',
+                successImg: 'images/plant_carrot_success.png',
+                failedImg: 'images/plant_carrot_failed.png',
+                waterSafe: [35, 75], sunSafe: [40, 80], fertSafe: [35, 75],
+                weatherPref: ['mild', 'cloudy'],
+                weakness: '거름이 너무 과하면 뿌리 모양이 갈라지고 갈변할 수 있습니다.',
+                fortunes: [
+                    '보이지 않는 곳에서 묵묵히 준비한 실력이 빛을 발합니다! 귀인의 도움이나 좋은 제안을 받을 수 있습니다.',
+                    '눈앞의 성과보다 알찬 내실을 다져 미래의 큰 성공을 확고히 다지는 날입니다.',
+                    '시력이 맑아지듯 중요한 판단을 내려야 할 순간에 현명한 결정을 내리게 됩니다.'
+                ],
+                colors: ['캐롯 오렌지', '호박 옐로우', '번트 시에나'],
+                items: ['손목시계', '볼펜 세트', '수첩']
+            },
+
+            // [과일]
+            {
+                id: 'strawberry', category: '과일', name: '딸기',
+                successImg: 'images/plant_strawberry_success.png',
+                failedImg: 'images/plant_strawberry_failed.png',
+                waterSafe: [45, 85], sunSafe: [40, 80], fertSafe: [45, 85],
+                weatherPref: ['mild', 'sunny'],
+                weakness: '온도와 습도에 민감하고 해충이 잘 생기므로 세심한 관리가 필요합니다.',
+                fortunes: [
+                    '달콤한 설렘과 행운이 가득한 하루! 연애운과 인기운이 최고조에 달해 어디서든 환영받습니다.',
+                    '기분 좋은 로맨틱한 이벤트나 사랑스러운 선물이 당신을 기다리고 있습니다.',
+                    '마음이 부드럽고 다정해져서 주변 사람들과의 관계가 더욱 애틋하고 깊어집니다.'
+                ],
+                colors: ['스트로베리 핑크', '베이비 핑크', '피치 coral'],
+                items: ['핸드크림', '립밤', '헤어핀']
+            },
+            {
+                id: 'lemon', category: '과일', name: '레몬',
+                successImg: 'images/plant_lemon_success.png',
+                failedImg: 'images/plant_lemon_failed.png',
+                waterSafe: [35, 75], sunSafe: [55, 95], fertSafe: [40, 80],
+                weatherPref: ['sunny', 'hot'],
+                weakness: '일조량이 부족하면 열매가 제대로 익지 않고 신맛만 강해집니다.',
+                fortunes: [
+                    '톡 쏘는 아이디어와 창의력이 샘솟는 날! 새로운 기획이나 학업에서 뛰어난 영감을 얻게 됩니다.',
+                    '지루했던 일상에 상큼하고 짜릿한 반전 이벤트가 일어나는 활기찬 하루입니다.',
+                    '재치 있는 말솜씨로 모임의 분위기를 주도하고 사람들에게 강렬한 인상을 남깁니다.'
+                ],
+                colors: ['레몬 옐로우', '라임 네온', '크림 화이트'],
+                items: ['노트북/펜', '블루투스 이어폰', '메모지']
+            },
+            {
+                id: 'grape', category: '과일', name: '포도',
+                successImg: 'images/plant_grape_success.png',
+                failedImg: 'images/plant_grape_failed.png',
+                waterSafe: [40, 80], sunSafe: [45, 85], fertSafe: [40, 80],
+                weatherPref: ['mild', 'sunny', 'cloudy'],
+                weakness: '균형 잡힌 관리가 중요하며, 해충을 방치하면 열매 품질이 크게 떨어집니다.',
+                fortunes: [
+                    '그동안 공들였던 인간관계나 프로젝트에서 알차고 풍성한 결실을 거두게 되는 날입니다.',
+                    '깊이 있는 통찰력과 지혜로 어려운 문제를 우아하게 해결하는 영감의 날입니다.',
+                    '풍요로운 보상과 함께 축하받을 일이 생겨 마음 깊이 뿌듯함을 느끼게 됩니다.'
+                ],
+                colors: ['로열 퍼플', '인디고 블루', '버건디 와인'],
+                items: ['에코백', '북마크', '머플러']
+            }
+        ];
+
+        const REGIONS = {
+            seoul: { name: '서울특별시', tempOffset: 0 },
+            gangneung: { name: '강원 강릉시', tempOffset: -2 },
+            daejeon: { name: '대전광역시', tempOffset: 1 },
+            gwangju: { name: '광주광역시', tempOffset: 2 },
+            busan: { name: '부산광역시', tempOffset: 4 },
+            jeju: { name: '제주특별자치도', tempOffset: 6 }
+        };
+
+        const WEATHER_POOL = [
+            { code: 'sunny', label: '☀️ 맑음', desc: '햇살이 따사롭고 화창합니다. 일조량이 빠르게 오르고 수분이 다소 빨리 증발합니다.', waterDrift: -1.2, sunDrift: +1.4, fertDrift: -0.6 },
+            { code: 'hot', label: '🔥 무더위/강한 햇빛', desc: '강렬한 햇빛이 내리쬐는 날입니다! 차광막을 적절히 사용하고 물을 자주 챙겨주세요.', waterDrift: -1.8, sunDrift: +2.0, fertDrift: -0.8 },
+            { code: 'cloudy', label: '☁️ 구름 많음', desc: '구름이 햇빛을 부드럽게 가려줍니다. 수분 유지가 쉽지만 햇빛이 부족해질 수 있습니다.', waterDrift: -0.7, sunDrift: -0.9, fertDrift: -0.5 },
+            { code: 'rainy', label: '🌧️ 촉촉한 비', desc: '촉촉한 단비가 내려 수분이 자연적으로 공급됩니다. 과습을 주의하세요!', waterDrift: +1.0, sunDrift: -1.2, fertDrift: -0.6 },
+            { code: 'mild', label: '🍃 선선하고 쾌청함', desc: '식물이 자라기에 더없이 완벽한 바람과 햇살이 부는 축복받은 날씨입니다.', waterDrift: -0.9, sunDrift: +0.5, fertDrift: -0.5 }
+        ];
+
+        // 🌟 도감 데이터 유지를 위해 기존 v9/v10/v11 키 통합 호환 처리
+        const STORAGE_KEY_DAILY = 'mint_garden_daily_v11';
+        const STORAGE_KEY_DEX = 'mint_garden_dex_v9'; // 기존에 쓰시던 도감 키와 연동되도록 유지
+        const STORAGE_KEY_HISTORY = 'mint_garden_history_v11';
+
+        const GAME_DURATION = 60;
+        let currentWeather = WEATHER_POOL[0];
+        let currentTemp = 20;
+        let selectedPlant = null;
+
+        let tickInterval = null;
+        let timeLeft = GAME_DURATION;
+        let isPlaying = false;
+
+        let stats = { water: 50, sun: 50, fert: 50 };
+        let isShadeOn = false;
+        let scoreAccumulator = 0;
+        let totalTicks = 0;
+        let pestDamage = 0;
+        let activePests = 0;
+
+        function getTodayString() {
+            const now = new Date();
+            const y = now.getFullYear();
+            const m = String(now.getMonth() + 1).padStart(2, '0');
+            const d = String(now.getDate()).padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function initApp() {
+            const todayStr = getTodayString();
+            document.getElementById('header-date').textContent = todayStr + ' 가드닝 일지';
+
+            document.getElementById('tab-garden').addEventListener('click', () => switchTab('garden'));
+            document.getElementById('tab-dex').addEventListener('click', () => switchTab('dex'));
+            document.getElementById('region-select').addEventListener('change', changeRegion);
+            document.getElementById('btn-start-grow').addEventListener('click', startGrowing);
+
+            document.getElementById('btn-water').addEventListener('click', actionWater);
+            document.getElementById('btn-shade').addEventListener('click', actionToggleShade);
+            document.getElementById('btn-fertilize').addEventListener('click', actionFertilize);
+
+            document.getElementById('btn-save-image').addEventListener('click', downloadCardImage);
+            document.getElementById('btn-open-dex').addEventListener('click', () => switchTab('dex'));
+
+            document.getElementById('dev-fast-btn').addEventListener('click', fastForwardTest);
+            document.getElementById('dev-reset-btn').addEventListener('click', resetForDeveloper);
+
+            // 🌟 도감 키 데이터 통합 마이그레이션 (v11로 바뀌어 날아간 경우 이전 버전 데이터 복구)
+            migratateOldDex();
+
+            updateDexUI();
+            changeRegion();
+            checkDailyStatus();
+        }
+
+        function migratateOldDex() {
+            try {
+                let currentDex = JSON.parse(localStorage.getItem(STORAGE_KEY_DEX)) || {};
+                ['mint_garden_dex_v11', 'mint_garden_dex_v10', 'mint_garden_dex'].forEach(oldKey => {
+                    const oldData = JSON.parse(localStorage.getItem(oldKey));
+                    if (oldData && typeof oldData === 'object') {
+                        currentDex = { ...oldData, ...currentDex };
+                    }
+                });
+                localStorage.setItem(STORAGE_KEY_DEX, JSON.stringify(currentDex));
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        function changeRegion() {
+            if (isPlaying) {
+                showToast('식물을 키우는 도중에는 지역을 변경할 수 없습니다!');
+                return;
+            }
+            const regionKey = document.getElementById('region-select').value;
+            const regionInfo = REGIONS[regionKey] || REGIONS.seoul;
+            const dateStr = getTodayString();
+
+            // 🌟 지역별·날짜별로 완전히 독립되면서도 다양한 날씨가 나오도록 개선된 해시 알고리즘
+            let hash = 0;
+            const seedStr = dateStr + '_' + regionKey + '_weather';
+            for (let i = 0; i < seedStr.length; i++) {
+                hash = ((hash << 5) - hash) + seedStr.charCodeAt(i);
+                hash |= 0;
+            }
+            const absHash = Math.abs(hash);
+
+            const month = new Date().getMonth() + 1;
+            let baseTemp = 18;
+            if (month >= 6 && month <= 8) baseTemp = 28;
+            else if (month >= 12 || month <= 2) baseTemp = 4;
+            else baseTemp = 16;
+
+            currentTemp = baseTemp + regionInfo.tempOffset + ((absHash % 5) - 2);
+
+            // 지역마다 다른 날씨 풀 인덱스 부여
+            const weatherIndex = (absHash + regionKey.length) % WEATHER_POOL.length;
+            currentWeather = WEATHER_POOL[weatherIndex];
+
+            if (currentTemp >= 31) currentWeather = WEATHER_POOL[1]; // 무더위
+            if (currentTemp <= 3) currentWeather = WEATHER_POOL[2]; // 구름/쌀쌀
+
+            document.getElementById('weather-badge').textContent = `${currentWeather.label} · ${currentTemp}°C`;
+            document.getElementById('weather-desc').textContent = currentWeather.desc;
+        }
+
+        function checkDailyStatus() {
+            const saved = localStorage.getItem(STORAGE_KEY_DAILY);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data.date === getTodayString() && data.result) {
+                        renderResultCard(data.result);
+                        showGardenState('result');
+                        return;
+                    }
+                } catch (e) {
+                    console.error(e);
+                }
+            }
+            showGardenState('idle');
+        }
+
+        function showGardenState(stateName) {
+            document.getElementById('state-idle').classList.add('hidden');
+            document.getElementById('state-playing').classList.add('hidden');
+            document.getElementById('state-result').classList.add('hidden');
+
+            document.getElementById(`state-${stateName}`).classList.remove('hidden');
+        }
+
+        function startGrowing() {
+            if (isPlaying) return;
+
+            const preferred = PLANTS_DB.filter(p => p.weatherPref.includes(currentWeather.code));
+            if (preferred.length > 0 && Math.random() < 0.7) {
+                selectedPlant = preferred[Math.floor(Math.random() * preferred.length)];
+            } else {
+                selectedPlant = PLANTS_DB[Math.floor(Math.random() * PLANTS_DB.length)];
+            }
+
+            stats.water = Math.round((selectedPlant.waterSafe[0] + selectedPlant.waterSafe[1]) / 2);
+            stats.sun = Math.round((selectedPlant.sunSafe[0] + selectedPlant.sunSafe[1]) / 2);
+            stats.fert = Math.round((selectedPlant.fertSafe[0] + selectedPlant.fertSafe[1]) / 2);
+
+            timeLeft = GAME_DURATION;
+            isPlaying = true;
+            isShadeOn = false;
+            scoreAccumulator = 0;
+            totalTicks = 0;
+            pestDamage = 0;
+            activePests = 0;
+
+            const regionKey = document.getElementById('region-select').value;
+            const regionName = (REGIONS[regionKey] || REGIONS.seoul).name;
+            
+            document.getElementById('plant-category-badge').textContent = `비밀 씨앗`;
+            document.getElementById('playing-region-badge').textContent = `📍 ${regionName}`;
+            document.getElementById('stage-weather-badge').textContent = `📍 ${regionName} · ${currentWeather.label.split(' ')[0]} ${currentTemp}°C`;
+            document.getElementById('pest-layer').innerHTML = '';
+
+            updateShadeUI();
+            setupSafeZoneBars();
+            updatePlayingUI();
+
+            showGardenState('playing');
+            document.getElementById('dev-fast-btn').classList.remove('hidden');
+            showToast(`식물 키우기를 시작합니다! 정성껏 돌봐주세요.`);
+
+            clearInterval(tickInterval);
+            tickInterval = setInterval(gameTick, 1000);
+        }
+
+        function setupSafeZoneBars() {
+            const setZone = (elId, range) => {
+                const el = document.getElementById(elId);
+                el.style.left = range[0] + '%';
+                el.style.width = (range[1] - range[0]) + '%';
+            };
+            setZone('water-safe-zone', selectedPlant.waterSafe);
+            setZone('sun-safe-zone', selectedPlant.sunSafe);
+            setZone('fert-safe-zone', selectedPlant.fertSafe);
+        }
+
+        function gameTick() {
+            if (!isPlaying) return;
+
+            timeLeft--;
+            totalTicks++;
+
+            stats.water = clamp(stats.water + currentWeather.waterDrift, 0, 100);
+            
+            let sunChange = currentWeather.sunDrift;
+            if (isShadeOn) {
+                sunChange = -1.8;
+            }
+            stats.sun = clamp(stats.sun + sunChange, 0, 100);
+            stats.fert = clamp(stats.fert + currentWeather.fertDrift, 0, 100);
+
+            let tickScore = 0;
+            if (inRange(stats.water, selectedPlant.waterSafe)) tickScore += 1;
+            if (inRange(stats.sun, selectedPlant.sunSafe)) tickScore += 1;
+            if (inRange(stats.fert, selectedPlant.fertSafe)) tickScore += 1;
+            scoreAccumulator += tickScore;
+
+            if (timeLeft > 6 && timeLeft < GAME_DURATION - 4 && activePests < 2 && Math.random() < 0.12) {
+                spawnPest();
+            }
+
+            if (activePests > 0) {
+                pestDamage += activePests * 1.2;
+            }
+
+            updatePlayingUI();
+
+            if (timeLeft <= 0) {
+                finishGrowing();
+            }
+        }
+
+        function actionWater() {
+            if (!isPlaying) return;
+            stats.water = clamp(stats.water + 20, 0, 100);
+            spawnFloatingEffect('💧');
+            updatePlayingUI();
+        }
+
+        function actionToggleShade() {
+            if (!isPlaying) return;
+            isShadeOn = !isShadeOn;
+            updateShadeUI();
+            spawnFloatingEffect(isShadeOn ? '☂️' : '☀️');
+        }
+
+        function actionFertilize() {
+            if (!isPlaying) return;
+            stats.fert = clamp(stats.fert + 22, 0, 100);
+            spawnFloatingEffect('✨');
+            updatePlayingUI();
+        }
+
+        function updateShadeUI() {
+            const overlay = document.getElementById('shade-overlay');
+            const btnText = document.getElementById('btn-shade-text');
+            const btn = document.getElementById('btn-shade');
+
+            if (isShadeOn) {
+                overlay.classList.remove('hidden');
+                btnText.textContent = '차광막 끄기';
+                btn.classList.replace('bg-amber-50', 'bg-stone-700');
+                btnText.classList.replace('text-amber-900', 'text-white');
+            } else {
+                overlay.classList.add('hidden');
+                btnText.textContent = '차광막 켜기';
+                btn.classList.replace('bg-stone-700', 'bg-amber-50');
+                btnText.classList.replace('text-white', 'text-amber-900');
+            }
+        }
+
+        function spawnPest() {
+            activePests++;
+            const pestLayer = document.getElementById('pest-layer');
+            const pestEl = document.createElement('button');
+            pestEl.type = 'button';
+            
+            const bugImages = ['images/bug_aphid.png', 'images/bug_caterpillar.png', 'images/bug_snail.png'];
+            const chosenBug = bugImages[Math.floor(Math.random() * bugImages.length)];
+            
+            pestEl.innerHTML = `<img src="${chosenBug}" alt="해충" class="w-24 h-24 object-contain drop-shadow-xl" onerror="this.outerHTML='<span class=\\'text-6xl\\'>🐛</span>'">`;
+            pestEl.className = 'absolute pest-wiggle pointer-events-auto p-2 focus:outline-none';
+            
+            const leftPct = 10 + Math.floor(Math.random() * 50);
+            const topPct = 40 + Math.floor(Math.random() * 30);
+            pestEl.style.left = leftPct + '%';
+            pestEl.style.top = topPct + '%';
+
+            pestEl.addEventListener('click', function (e) {
+                e.stopPropagation();
+                pestEl.remove();
+                activePests = Math.max(0, activePests - 1);
+                spawnFloatingEffect('💥');
+                showToast('벌레를 퇴치했습니다! 👍');
+                updatePlayingUI();
+            });
+
+            pestLayer.appendChild(pestEl);
+            showToast('⚠️ 해충이 나타났어요! 터치해서 잡으세요!');
+        }
+
+        function spawnFloatingEffect(emoji) {
+            const layer = document.getElementById('effect-layer');
+            const el = document.createElement('span');
+            el.textContent = emoji;
+            el.className = 'text-4xl effect-float absolute';
+            layer.appendChild(el);
+            setTimeout(() => el.remove(), 900);
+        }
+
+        function updatePlayingUI() {
+            const mins = String(Math.floor(timeLeft / 60)).padStart(2, '0');
+            const secs = String(timeLeft % 60).padStart(2, '0');
+            document.getElementById('timer-display').textContent = `${mins}:${secs}`;
+
+            const progress = ((GAME_DURATION - timeLeft) / GAME_DURATION) * 100;
+            document.getElementById('growth-progress').style.width = `${progress}%`;
+
+            const plantImgEl = document.getElementById('plant-img');
+            const titleEl = document.getElementById('plant-stage-title');
+
+            let targetImg = 'images/soil_base.png';
+            let targetTitle = '흙';
+
+            if (progress >= 60) {
+                targetImg = 'images/stage_sprout.jpg';
+                targetTitle = '잎줄기';
+            } else if (progress >= 25) {
+                targetImg = 'images/stage_seed_2.jpg';
+                targetTitle = '새싹';
+            } else {
+                targetImg = 'images/soil_base.png';
+                targetTitle = '흙';
+            }
+
+            if (!plantImgEl.src.includes(targetImg.split('/').pop())) {
+                plantImgEl.src = targetImg;
+            }
+            titleEl.textContent = targetTitle;
+
+            const warnings = [];
+            updateSingleGauge('water', stats.water, selectedPlant.waterSafe, '💧 수분 부족!', '🌊 과습 주의!', warnings);
+            updateSingleGauge('sun', stats.sun, selectedPlant.sunSafe, '☁️ 햇빛 부족!', '🔥 잎이 타고 있어요!', warnings);
+            updateSingleGauge('fert', stats.fert, selectedPlant.fertSafe, '🧪 영양 부족!', '⚠️ 영양 과다!', warnings);
+
+            if (activePests > 0) {
+                warnings.unshift(`🐛 벌레 출몰 (${activePests}마리)!`);
+            }
+
+            const alertEl = document.getElementById('status-alert');
+            if (warnings.length > 0) {
+                alertEl.textContent = warnings[0];
+                alertEl.classList.remove('hidden');
+            } else {
+                alertEl.classList.add('hidden');
+            }
+        }
+
+        function updateSingleGauge(type, val, safeRange, lowMsg, highMsg, warnings) {
+            const bar = document.getElementById(`${type}-bar`);
+            const text = document.getElementById(`${type}-val-text`);
+            const rounded = Math.round(val);
+
+            bar.style.width = `${rounded}%`;
+
+            if (val < safeRange[0]) {
+                text.textContent = `부족 (${rounded}%)`;
+                text.className = 'text-rose-500 font-bold';
+                warnings.push(lowMsg);
+            } else if (val > safeRange[1]) {
+                text.textContent = `과다 (${rounded}%)`;
+                text.className = 'text-rose-500 font-bold';
+                warnings.push(highMsg);
+            } else {
+                text.textContent = `적정 (${rounded}%)`;
+                text.className = 'text-emerald-600 font-bold';
+            }
+        }
+
+        function getUniqueRandomItem(pool, historyKey) {
+            let history = [];
+            try {
+                history = JSON.parse(localStorage.getItem(historyKey)) || [];
+            } catch (e) { history = []; }
+
+            let available = pool.filter(item => !history.includes(item));
+            if (available.length === 0) {
+                available = pool;
+                history = [];
+            }
+
+            const chosen = available[Math.floor(Math.random() * available.length)];
+            history.push(chosen);
+            if (history.length > 2) history.shift();
+            localStorage.setItem(historyKey, JSON.stringify(history));
+
+            return chosen;
+        }
+
+        function finishGrowing() {
+            clearInterval(tickInterval);
+            isPlaying = false;
+            document.getElementById('dev-fast-btn').classList.add('hidden');
+
+            const maxPossibleScore = Math.max(1, totalTicks * 3);
+            let rawPercent = (scoreAccumulator / maxPossibleScore) * 100;
+            let finalScore = Math.max(0, Math.round(rawPercent - pestDamage));
+
+            const isFailed = (
+                stats.water <= 3 || stats.water >= 98 ||
+                stats.sun <= 3 || stats.sun >= 98 ||
+                stats.fert <= 3 || stats.fert >= 98 ||
+                activePests > 0 ||
+                finalScore < 25
+            );
+
+            let statusLabel = '';
+            let harvestImg = '';
+            let harvestComment = '';
+            let fortuneText = '';
+            let luckyColor = '';
+            let luckyItem = '';
+
+            if (isFailed) {
+                statusLabel = '육성 실패';
+                harvestImg = selectedPlant.failedImg;
+                harvestComment = activePests > 0
+                    ? '해충을 제때 잡지 못해 식물이 시들어버렸습니다.'
+                    : `${selectedPlant.weakness}`;
+                fortuneText = '오늘은 욕심을 내려놓고 잠시 쉬어가라는 신호입니다. 무리한 계획보다는 주변을 정돈하며 내일을 기약하세요.';
+                luckyColor = '차분한 그레이';
+                luckyItem = '따뜻한 차 한 잔';
+            } else {
+                statusLabel = '육성: 상태 좋음';
+                harvestImg = selectedPlant.successImg;
+                harvestComment = '완벽한 수분과 햇빛 밸런스로 아주 건강하게 키워냈습니다!';
+                
+                fortuneText = getUniqueRandomItem(selectedPlant.fortunes, `${STORAGE_KEY_HISTORY}_${selectedPlant.id}_fortune`);
+                luckyColor = getUniqueRandomItem(selectedPlant.colors, `${STORAGE_KEY_HISTORY}_${selectedPlant.id}_color`);
+                luckyItem = getUniqueRandomItem(selectedPlant.items, `${STORAGE_KEY_HISTORY}_${selectedPlant.id}_item`);
+            }
+
+            const regionKey = document.getElementById('region-select').value;
+            const regionName = (REGIONS[regionKey] || REGIONS.seoul).name;
+
+            const resultObj = {
+                plantId: selectedPlant.id,
+                category: selectedPlant.category,
+                plantName: selectedPlant.name,
+                imgSrc: harvestImg,
+                statusLabel: statusLabel,
+                isFailed: isFailed,
+                comment: harvestComment,
+                fortune: fortuneText,
+                luckyColor: luckyColor,
+                luckyItem: luckyItem,
+                region: regionName
+            };
+
+            localStorage.setItem(STORAGE_KEY_DAILY, JSON.stringify({
+                date: getTodayString(),
+                result: resultObj
+            }));
+
+            if (!isFailed) {
+                saveToDex(selectedPlant.id);
+            }
+
+            renderResultCard(resultObj);
+            showGardenState('result');
+        }
+
+        function renderResultCard(res) {
+            const card = document.getElementById('fortune-card');
+            const badge = document.getElementById('res-status-badge');
+            const commentEl = document.getElementById('res-harvest-comment');
+
+            card.classList.remove('status-good-glow');
+            if (!res.isFailed) {
+                card.classList.add('status-good-glow');
+                badge.className = 'text-xs font-black px-3 rounded-full bg-emerald-500 text-white shadow-sm inline-flex items-center justify-center h-7 leading-none';
+                commentEl.className = 'text-xs text-emerald-700 font-medium mt-1';
+            } else {
+                badge.className = 'text-xs font-black px-3 rounded-full bg-rose-500 text-white shadow-sm inline-flex items-center justify-center h-7 leading-none';
+                commentEl.className = 'text-xs text-rose-600 font-medium mt-1';
+            }
+
+            document.getElementById('res-category').textContent = `${res.category} · ${res.region}`;
+            badge.textContent = res.statusLabel;
+            document.getElementById('res-plant-img').src = res.imgSrc;
+            document.getElementById('res-plant-name').textContent = res.plantName;
+            commentEl.textContent = res.comment;
+            document.getElementById('res-fortune-text').textContent = res.fortune;
+            document.getElementById('res-lucky-color').textContent = res.luckyColor;
+            document.getElementById('res-lucky-item').textContent = res.luckyItem;
+        }
+
+        function downloadCardImage() {
+            const cardElement = document.getElementById('fortune-card');
+            showToast('운세 카드를 이미지로 저장하는 중...');
+
+            html2canvas(cardElement, {
+                backgroundColor: '#ffffff',
+                scale: 2,
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `MINT_GARDEN_${getTodayString()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast('이미지가 저장되었습니다! 📸');
+            }).catch(err => {
+                console.error(err);
+                showToast('이미지 저장 중 오류가 발생했습니다.');
+            });
+        }
+
+        function saveToDex(plantId) {
+            let dex = {};
+            try {
+                dex = JSON.parse(localStorage.getItem(STORAGE_KEY_DEX)) || {};
+            } catch (e) { dex = {}; }
+
+            dex[plantId] = true;
+            localStorage.setItem(STORAGE_KEY_DEX, JSON.stringify(dex));
+            updateDexUI();
+        }
+
+        function updateDexUI() {
+            let dex = {};
+            try {
+                dex = JSON.parse(localStorage.getItem(STORAGE_KEY_DEX)) || {};
+            } catch (e) { dex = {}; }
+
+            const collectedCount = Object.keys(dex).length;
+            document.getElementById('dex-count').textContent = collectedCount;
+            document.getElementById('dex-progress-text').textContent = `${collectedCount} / ${PLANTS_DB.length} 수집`;
+
+            const grid = document.getElementById('dex-grid');
+            grid.innerHTML = '';
+
+            PLANTS_DB.forEach(plant => {
+                const isUnlocked = Boolean(dex[plant.id]);
+
+                const item = document.createElement('div');
+                item.className = `rounded-2xl p-3 text-center border transition flex flex-col items-center ${
+                    isUnlocked
+                        ? 'bg-emerald-50/60 border-emerald-200 shadow-sm'
+                        : 'bg-stone-50 border-stone-100 opacity-60'
+                }`;
+
+                item.innerHTML = `
+                    <div class="w-14 h-14 flex items-center justify-center mb-1">
+                        ${isUnlocked
+                            ? `<img src="${plant.successImg}" alt="${plant.name}" class="w-12 h-12 object-contain">`
+                            : `<span class="text-2xl">❓</span>`
+                        }
+                    </div>
+                    <div class="text-xs font-bold text-stone-800 truncate w-full">${isUnlocked ? plant.name : '미발견'}</div>
+                    <div class="text-[10px] text-stone-400 mb-1">${plant.category}</div>
+                    <span class="inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        isUnlocked ? 'bg-emerald-200 text-emerald-900' : 'bg-stone-200 text-stone-500'
+                    }">
+                        ${isUnlocked ? '수확 완료' : '잠김'}
+                    </span>
+                `;
+                grid.appendChild(item);
+            });
+        }
+
+        function switchTab(tabName) {
+            const gardenView = document.getElementById('view-garden');
+            const dexView = document.getElementById('view-dex');
+            const tabGarden = document.getElementById('tab-garden');
+            const tabDex = document.getElementById('tab-dex');
+
+            if (tabName === 'garden') {
+                gardenView.classList.remove('hidden');
+                dexView.classList.add('hidden');
+                tabGarden.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm transition';
+                tabDex.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition';
+            } else {
+                updateDexUI();
+                gardenView.classList.add('hidden');
+                dexView.classList.remove('hidden');
+                tabDex.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-600 text-white shadow-sm transition';
+                tabGarden.className = 'px-3 py-1.5 rounded-xl text-xs font-bold bg-emerald-50 text-emerald-700 hover:bg-emerald-100 transition';
+            }
+        }
+
+        function resetForDeveloper() {
+            clearInterval(tickInterval);
+            isPlaying = false;
+            localStorage.removeItem(STORAGE_KEY_DAILY);
+            document.getElementById('dev-fast-btn').classList.add('hidden');
+            showGardenState('idle');
+            showToast('🛠️ [개발자 모드] 오늘의 참여 제한이 초기화되었습니다!');
+        }
+
+        function fastForwardTest() {
+            if (!isPlaying) return;
+            timeLeft = 5;
+            updatePlayingUI();
+            showToast('⏩ 테스트를 위해 남은 시간을 5초로 단축했습니다.');
+        }
+
+        function clamp(val, min, max) {
+            return Math.min(Math.max(val, min), max);
+        }
+
+        function inRange(val, range) {
+            return val >= range[0] && val <= range[1];
+        }
+
+        let toastTimeout = null;
+        function showToast(msg) {
+            const toast = document.getElementById('toast-msg');
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2200);
+        }
+    </script>
+</body>
+</html>
